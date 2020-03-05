@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 const TILE_SIZE_PX = 23;
 
@@ -30,7 +30,17 @@ function initTiles(tileCanvas, board) {
     }
 }
 
+function pressTile(tileCanvas, board, tileCol, tileRow) {
+    let ctx = tileCanvas.getContext('2d');    
+    const tileLeft = tileCol * TILE_SIZE_PX;
+    const tileTop = tileRow * TILE_SIZE_PX;
+
+    ctx.fillStyle = 'light-grey';
+    ctx.fillRect(tileLeft, tileTop, TILE_SIZE_PX, TILE_SIZE_PX);
+}
+
 function getTileInds(x, y) {
+    console.log("x, y", x, y)
     return [Math.floor(x / TILE_SIZE_PX), Math.floor(y / TILE_SIZE_PX)]
 }
 
@@ -41,17 +51,27 @@ function Tiles(props) {
         row_size: props.row_size,
         col_size: props.col_size
     };
+
     const [board, setBoard] = useState(initialBoardState);
+    const [htmlCanvas, setHtmlCanvas] = useState(null);
+
+    const createBoard = useCallback(tileCanvas => {
+        setHtmlCanvas(tileCanvas);
+        initTiles(tileCanvas, board);
+    }, [board]);
 
     function handleClick(e) {
         // coords relative to top left of canvas
         const x = e.clientX - board.x;
         const y = e.clientY - board.y;
 
-        console.log(x, y);
+        const tileInds = getTileInds(x, y);
+
+        console.log("inds", tileInds);
+
+        pressTile(htmlCanvas, board, tileInds[0], tileInds[1]);
     }
 
-    const createBoard = useCallback(tileCanvas => initTiles(tileCanvas, board), [])
     return (
         <canvas id="tileCanvas"
                 onClick={handleClick}
