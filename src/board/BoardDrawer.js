@@ -1,110 +1,66 @@
-const TILE_SIZE = 23;
 const TILE_BORDER_THICKNESS = 2;
-const BORDER_THICKNESS = 8;
-const HEADER_HEIGHT = 90;
 
-function getSizeRequirements(rowSize, colSize) {
-    return [
-        (rowSize * TILE_SIZE) + (BORDER_THICKNESS * 2),
-        (colSize * TILE_SIZE) + (BORDER_THICKNESS * 3) + (HEADER_HEIGHT)
-    ]
-}
-
-function initBoard(tileCanvas) {
-    const canvasBounds = tileCanvas.getBoundingClientRect();
-    const width = canvasBounds.width;
-    const height = canvasBounds.height;
+function initialDraw(tileCanvas, drawingInfo) {
+    const width = drawingInfo.totalWidth;
+    const height = drawingInfo.totalHeight;
+    const borderThickness = drawingInfo.borderThickness;
+    const tileSize = drawingInfo.tileSize;
 
     // all drawing coords are relative to canvas
+    // fill solid rectangle
     let ctx = tileCanvas.getContext('2d');
     ctx.fillStyle = 'grey';
     ctx.fillRect(0, 0, width, height);
 
     // draw borders
-    ctx.lineWidth = BORDER_THICKNESS;
-    const halfWidth = BORDER_THICKNESS / 2;
+    ctx.lineWidth = borderThickness;
+    const halfWidth = borderThickness / 2;
 
     // header menu's border
-    const headerHeight = HEADER_HEIGHT + (2 * BORDER_THICKNESS);
+    const paddedHeader = drawingInfo.headerExtents.createPadded(halfWidth);
     ctx.beginPath();
-    ctx.rect(halfWidth, halfWidth, width - BORDER_THICKNESS, headerHeight - BORDER_THICKNESS);
+    ctx.rect(paddedHeader.left,
+             paddedHeader.top,
+             paddedHeader.width,
+             paddedHeader.height);
     ctx.stroke();
 
     // tile grid's border
-    const tileGridY = headerHeight;
+    const paddedTiles = drawingInfo.tileExtents.createPadded(halfWidth);
     ctx.beginPath();
-    ctx.rect(halfWidth, tileGridY - halfWidth, 
-             width - BORDER_THICKNESS, 
-             height - tileGridY);
+    ctx.rect(paddedTiles.left,
+             paddedTiles.top,
+             paddedTiles.width,
+             paddedTiles.height);
     ctx.stroke();
 
     // draw tile grid
-    const tilesX = BORDER_THICKNESS;
-    const tilesY = tileGridY;
+    const tilesX = drawingInfo.tileExtents.left;
+    const tilesY = drawingInfo.tileExtents.top;
     ctx.lineWidth = TILE_BORDER_THICKNESS;
-    for (let colX = tilesX; colX <= width; colX += TILE_SIZE) {
-        ctx.moveTo(colX, tileGridY);
+    for (let colX = tilesX; colX <= width; colX += tileSize) {
+        ctx.moveTo(colX, tilesY);
         ctx.lineTo(colX, height);
         ctx.stroke();
     }
 
-    for (let rowY = tilesY; rowY <= height; rowY += TILE_SIZE) {
+    for (let rowY = tilesY; rowY <= height; rowY += tileSize) {
         ctx.moveTo(0, rowY);
         ctx.lineTo(width, rowY);
         ctx.stroke();
     }
 }
 
-function clickBoard(tileCanvas, clickX, clickY) {
-    const canvasBounds = tileCanvas.getBoundingClientRect();
-    const canvasX = clickX - canvasBounds.x;
-    const canvasY = clickY - canvasBounds.y;
+function redrawTile(tileCol, tileRow, drawingInfo, tileCanvas, tileVal) {
+    const tileSize = drawingInfo.tileSize;
+    const tileX = drawingInfo.tileExtents.left + (tileCol * tileSize);
+    const tileY = drawingInfo.tileExtents.top + (tileRow * tileSize);
 
-    const canvasWidth = canvasBounds.width;
-    const canvasHeight= canvasBounds.height;
-
-    if (canvasX < BORDER_THICKNESS || canvasX > canvasWidth - BORDER_THICKNESS ||
-        canvasY < BORDER_THICKNESS || canvasY > canvasHeight - BORDER_THICKNESS) 
-    {
-        // clicked borders, nothing happens
-        return;
-    }
-
-    if (canvasY > BORDER_THICKNESS * 2 + HEADER_HEIGHT) {
-        // clicked tile grid, process click
-        pressTile(tileCanvas, clickX, clickY);
-
-    } else {
-        // clicked restart, reset board
-        initBoard(tileCanvas);
-    }
-}
-
-function pressTile(tileCanvas, clickX, clickY) {
-    const canvasBounds = tileCanvas.getBoundingClientRect();
-    const x = clickX - canvasBounds.x - BORDER_THICKNESS;
-    const y = clickY - canvasBounds.y + BORDER_THICKNESS;
-
-    const [tileCol, tileRow] = getTileInds(x, y);
-    const tileLeft = tileCol * TILE_SIZE + BORDER_THICKNESS;
-    const tileTop = tileRow * TILE_SIZE - BORDER_THICKNESS;
-
-    let ctx = tileCanvas.getContext('2d');    
+    let ctx = tileCanvas.getContext('2d');
     ctx.fillStyle = 'light-grey';
-    ctx.fillRect(tileLeft, tileTop, TILE_SIZE, TILE_SIZE);
+    ctx.beginPath();
+    ctx.fillRect(tileX, tileY, tileSize, tileSize);
+    ctx.stroke();
 }
 
-function depressTile(tileCanvas, tileCol, tileRow) {
-    const tileLeft = tileCol * TILE_SIZE + BORDER_THICKNESS;
-    const tileTop = tileRow * TILE_SIZE - BORDER_THICKNESS;
-
-    let ctx = tileCanvas.getContext('2d');    
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(tileLeft, tileTop, TILE_SIZE, TILE_SIZE);
-}
-
-function getTileInds(x, y, board) {
-    return [Math.floor(x / TILE_SIZE), Math.floor(y / TILE_SIZE)]
-}
-
-export { getSizeRequirements, initBoard, clickBoard }
+export { initialDraw, redrawTile }
