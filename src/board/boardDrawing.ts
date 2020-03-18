@@ -1,6 +1,6 @@
 import Extents from "../util/Extents"
 import { TileDrawMap } from "./tile";
-import { DrawContext } from "./Board"
+import { DrawContext } from "./DrawContext";
 
 const TILE_BORDER_THICKNESS = 2;
 
@@ -58,8 +58,6 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
 function redrawTile(tileExtents: Extents, tileCanvas: HTMLCanvasElement, tileVal: number) {
     const drawProps = TileDrawMap(tileVal);
     
-    console.log("redraw to ", tileVal);
-
     let ctx = tileCanvas.getContext('2d');
 
     const color = drawProps.baseColor;

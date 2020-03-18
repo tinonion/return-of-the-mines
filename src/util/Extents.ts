@@ -20,10 +20,10 @@ class Extents {
     }
 
     isInside(x: number, y: number) {
-        return x >= this.left &&
-               x <= this.right &&
-               y >= this.top &&
-               y <= this.bottom;
+        return x > this.left &&
+               x < this.right &&
+               y > this.top &&
+               y < this.bottom;
     }
 
     createPadded(padding: number) {
