@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import './index.css';
-import Board from './board/Board';
+import { Board } from './board/Board';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<Board rowSize={30} colSize={16}/>, document.getElementById('root'));

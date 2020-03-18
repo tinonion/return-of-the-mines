@@ -1,6 +1,10 @@
+import Extents from "../util/Extents"
+import { TileDrawMap } from "./tile";
+import { DrawContext } from "./Board"
+
 const TILE_BORDER_THICKNESS = 2;
 
-function initialDraw(tileCanvas, drawingInfo) {
+function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
     const width = drawingInfo.totalWidth;
     const height = drawingInfo.totalHeight;
     const borderThickness = drawingInfo.borderThickness;
@@ -51,15 +55,25 @@ function initialDraw(tileCanvas, drawingInfo) {
     }
 }
 
-function redrawTile(tileCol, tileRow, drawingInfo, tileCanvas, tileVal) {
-    const tileSize = drawingInfo.tileSize;
-    const tileX = drawingInfo.tileExtents.left + (tileCol * tileSize);
-    const tileY = drawingInfo.tileExtents.top + (tileRow * tileSize);
+function redrawTile(tileExtents: Extents, tileCanvas: HTMLCanvasElement, tileVal: number) {
+    const drawProps = TileDrawMap(tileVal);
+    
+    console.log("redraw to ", tileVal);
 
     let ctx = tileCanvas.getContext('2d');
-    ctx.fillStyle = 'light-grey';
+
+    const color = drawProps.baseColor;
+    ctx.fillStyle = color;
+
     ctx.beginPath();
-    ctx.fillRect(tileX, tileY, tileSize, tileSize);
+    ctx.fillRect(tileExtents.left, tileExtents.top, 
+        tileExtents.width, tileExtents.height);
+    ctx.stroke();
+
+    ctx.lineWidth = TILE_BORDER_THICKNESS;
+    ctx.beginPath();
+    ctx.rect(tileExtents.left, tileExtents.top, 
+        tileExtents.width, tileExtents.height);
     ctx.stroke();
 }
 

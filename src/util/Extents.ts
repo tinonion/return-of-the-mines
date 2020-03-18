@@ -1,5 +1,10 @@
 class Extents {
-    constructor(left, top, width, height) {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+
+    constructor(left: number, top: number, width: number, height: number) {
         this.left = left;
         this.top = top;
         this.width = width;
@@ -14,14 +19,14 @@ class Extents {
         return this.top + this.height;
     }
 
-    isInside(x, y) {
+    isInside(x: number, y: number) {
         return x >= this.left &&
                x <= this.right &&
                y >= this.top &&
                y <= this.bottom;
     }
 
-    createPadded(padding) {
+    createPadded(padding: number) {
         return new Extents(
             this.left - padding,
             this.top - padding,
