@@ -15,6 +15,11 @@ export function RBoard(props: BoardProps) {
     const canvasRef = useRef(null);
 
     const createBoard = useCallback(tileCanvas => {
+        tileCanvas.oncontextmenu = function (e: any) {
+            // disable context menu on right click
+            e.preventDefault();
+        }
+
         canvasRef.current = tileCanvas;
         board = new Board(props.rowSize, props.colSize, canvasRef.current);
     }, []);
@@ -27,23 +32,28 @@ export function RBoard(props: BoardProps) {
 
     function handleMouseDown(e: React.MouseEvent) {
         const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);
-        board.handleMouseDown(canvasX, canvasY);
+        if (e.buttons === 1) {
+            board.handleLeftClick(canvasX, canvasY);
+
+        } else if (e.buttons === 2) {
+            board.handleRightClick(canvasX, canvasY);
+        }
     }
 
     function handleMouseDrag(e: React.MouseEvent) {
-        if (e.buttons !== 1) {
-            // mouse is not pressed
-            return
+        if (e.buttons === 1) {
+            // mouse is pressed
+            const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
+            board.handleMouseDrag(canvasX, canvasY);
         }
-
-        const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
-        board.handleMouseDrag(canvasX, canvasY);
     }
 
     function handleMouseUp(e: React.MouseEvent) {
-        // reveal currently selected tile
-        const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
-        board.handleMouseUp(canvasX, canvasY);
+        if (e.button === 0) {
+            // reveal currently selected tile
+            const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
+            board.handleMouseUp(canvasX, canvasY);
+        }
     }
 
     const [width, height] = inferCanvasSize(props.rowSize, props.colSize);

@@ -1,4 +1,5 @@
-import { TileState, createTiles } from "./tile";
+import { createTiles } from "./tile/tileUtil";
+import { TileState } from "./tile/tileDrawing";
 import { DrawContext, createDrawContext } from "./DrawContext";
 import * as boardDrawing from "./boardDrawing";
 import Extents from "../util/Extents";
@@ -57,12 +58,12 @@ export default class Board {
 
     changeTileValue(tileCol: number, tileRow: number, tileState: TileState) {
         const tileExtents = this.getTileExtents(tileCol, tileRow);
-        boardDrawing.redrawTile(tileExtents, this.canvas, tileState);
+        boardDrawing.redrawTile(tileExtents, this.canvas, tileState, this.drawContext);
         this.tiles[tileCol][tileRow] = tileState;
     }
 
 
-    handleMouseDown(canvasX: number, canvasY: number) {
+    handleLeftClick(canvasX: number, canvasY: number) {
         if (this.inHeader(canvasX, canvasY)) {
             // handle clicking the header
             this.reset();
@@ -76,6 +77,14 @@ export default class Board {
                 // tile isn't revealed yet
                 this.changeTileValue(tileCol, tileRow, TileState.Pressed);
             }
+        }
+    }
+
+    handleRightClick(canvasX: number, canvasY: number) {
+        if (this.inTiles(canvasX, canvasY)) {
+            // handle flag placement with right click
+            const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
+            this.changeTileValue(tileCol, tileRow, TileState.Flag);
         }
     }
 

@@ -1,5 +1,5 @@
 import Extents from "../util/Extents"
-import { TileDrawMap } from "./tile";
+import { TileDrawMap } from "./tile/tileDrawing";
 import { DrawContext } from "./DrawContext";
 
 const TILE_BORDER_THICKNESS = 2;
@@ -55,12 +55,13 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
     }
 }
 
-function redrawTile(tileExtents: Extents, tileCanvas: HTMLCanvasElement, tileVal: number) {
-    const drawProps = TileDrawMap(tileVal);
+function redrawTile(
+    tileExtents: Extents, tileCanvas: HTMLCanvasElement, tileVal: number, drawContext: DrawContext) {
+    const tileDrawProps = TileDrawMap(tileVal);
     
     let ctx = tileCanvas.getContext('2d');
 
-    const color = drawProps.baseColor;
+    const color = tileDrawProps.baseColor;
     ctx.fillStyle = color;
 
     ctx.beginPath();
@@ -73,6 +74,19 @@ function redrawTile(tileExtents: Extents, tileCanvas: HTMLCanvasElement, tileVal
     ctx.rect(tileExtents.left, tileExtents.top, 
         tileExtents.width, tileExtents.height);
     ctx.stroke();
+
+    if (tileDrawProps.imagePath != null) {
+        // copy image into new one and assign load callback
+        let img = new Image();
+        img.src = tileDrawProps.imagePath
+
+        const tileSize = drawContext.tileSize;
+        img.onload = function () {
+            ctx.drawImage(img,
+            tileExtents.left, tileExtents.top,
+            tileSize, tileSize);
+        }
+    }
 }
 
 export { initialDraw, redrawTile }
