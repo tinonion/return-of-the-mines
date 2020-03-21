@@ -1,30 +1,42 @@
-import { createTiles } from "./tile/tileUtil";
+import { createTiles, generateMineMask } from "./tile/tileGen";
 import { TileState } from "./tile/tileDrawing";
 import { DrawContext, createDrawContext } from "./DrawContext";
 import * as boardDrawing from "./boardDrawing";
 import Extents from "../util/Extents";
 import * as arrayUtil from "../util/arrayUtil";
 
+enum BoardState {
+    Idle,
+    InProgress,
+    Lost,
+    Won
+}
+
 export default class Board {
+    boardState: BoardState;
     canvas: HTMLCanvasElement;
     drawContext: DrawContext;
     tiles: Array<Array<TileState>>;
     selectedTile: Array<number> | null;
+    mineMask: Array<Array<boolean>> | null;
 
     constructor(rowSize: number, colSize: number, boardCanvas: HTMLCanvasElement) {
+        this.boardState = BoardState.Idle;
         this.selectedTile = null;
         this.canvas = boardCanvas;
         this.drawContext = createDrawContext(rowSize, colSize);
         this.tiles = createTiles(rowSize, colSize);
+        this.mineMask = null;
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
     }
 
     reset() {
-        const colSize = this.tiles[0].length;
-        const rowSize = this.tiles.length;
+        const colSize = this.tiles.length;
+        const rowSize = this.tiles[0].length;
         this.tiles = createTiles(rowSize, colSize);
         boardDrawing.initialDraw(this.canvas, this.drawContext);
+        this.boardState = BoardState.Idle;
     }
 
     getTileInds(x: number, y: number) {
@@ -45,7 +57,7 @@ export default class Board {
     }
 
     getSelectedState() {
-        return this.tiles[this.selectedTile[0]][this.selectedTile[1]];
+        return this.tiles[this.selectedTile[1]][this.selectedTile[0]];
     }
 
     inTiles(x: number, y: number) {
@@ -59,7 +71,7 @@ export default class Board {
     changeTileValue(tileCol: number, tileRow: number, tileState: TileState) {
         const tileExtents = this.getTileExtents(tileCol, tileRow);
         boardDrawing.redrawTile(tileExtents, this.canvas, tileState, this.drawContext);
-        this.tiles[tileCol][tileRow] = tileState;
+        this.tiles[tileRow][tileCol] = tileState;
     }
 
 
@@ -69,11 +81,26 @@ export default class Board {
             this.reset();
 
         } else if (this.inTiles(canvasX, canvasY)) {
-            // handle tile click
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
+            if (this.boardState === BoardState.Idle) {
+                // first click of the game, generate mines
+                this.boardState = BoardState.InProgress;
+
+                this.mineMask = generateMineMask(this.tiles, tileCol, tileRow, 99);
+
+                for (let i = 0; i < this.mineMask.length; i++) {
+                    for (let j = 0; j < this.mineMask[0].length; j++) {
+                        if (this.mineMask[i][j]) {
+                            this.changeTileValue(j, i, TileState.Mine);
+                        }
+                    }
+                }
+            }
+
+            // handle tile click
             this.selectedTile = [tileCol, tileRow];
     
-            if (this.tiles[tileCol][tileRow] === TileState.Unpressed) {
+            if (this.tiles[tileRow][tileCol] === TileState.Unpressed) {
                 // tile isn't revealed yet
                 this.changeTileValue(tileCol, tileRow, TileState.Pressed);
             }
@@ -117,7 +144,7 @@ export default class Board {
                     TileState.Unpressed); // set tile to depressed
             }
 
-            if (this.tiles[tileCol][tileRow] === TileState.Unpressed) {
+            if (this.tiles[tileRow][tileCol] === TileState.Unpressed) {
                 this.changeTileValue(tileCol, tileRow, TileState.Pressed); // set tile to pressed
                 this.selectedTile = [tileCol, tileRow];
             }

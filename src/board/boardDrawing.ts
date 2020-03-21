@@ -75,6 +75,19 @@ function redrawTile(
         tileExtents.width, tileExtents.height);
     ctx.stroke();
 
+    if (tileDrawProps.tileText != null) {
+        const tileSize = drawContext.tileSize;
+
+        ctx.font = String(tileSize - 10) + "px bold Arial";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+
+        const x = tileExtents.left + (tileSize / 2);
+        const y = tileExtents.top + (tileSize / 2) + 5;
+        ctx.fillText(tileDrawProps.tileText, x, y);
+    }
+
+    /*
     if (tileDrawProps.imagePath != null) {
         // copy image into new one and assign load callback
         let img = new Image();
@@ -86,7 +99,7 @@ function redrawTile(
             tileExtents.left, tileExtents.top,
             tileSize, tileSize);
         }
-    }
+    } */
 }
 
 export { initialDraw, redrawTile }
