@@ -1,5 +1,6 @@
 import { createTiles, generateMineMask } from "./tile/tileGen";
 import { TileState } from "./tile/tileDrawing";
+import { evaluateTile, NEIGHBOR_MATRIX } from "./tile/tileLogic";
 import { DrawContext, createDrawContext } from "./DrawContext";
 import * as boardDrawing from "./boardDrawing";
 import Extents from "../util/Extents";
@@ -60,6 +61,10 @@ export default class Board {
         return this.tiles[this.selectedTile[1]][this.selectedTile[0]];
     }
 
+    getTileState(tileCol: number, tileRow: number) {
+        return this.tiles[tileRow][tileCol];
+    }
+
     inTiles(x: number, y: number) {
         return this.drawContext.tileExtents.isInside(x, y);
     }
@@ -68,12 +73,56 @@ export default class Board {
         return this.drawContext.headerExtents.isInside(x, y);
     }
 
+    isMine(tileCol: number, tileRow: number) {
+        return this.mineMask[tileRow][tileCol];
+    }
+
     changeTileValue(tileCol: number, tileRow: number, tileState: TileState) {
         const tileExtents = this.getTileExtents(tileCol, tileRow);
         boardDrawing.redrawTile(tileExtents, this.canvas, tileState, this.drawContext);
         this.tiles[tileRow][tileCol] = tileState;
     }
 
+    loseGame() {
+        console.log("lost game");
+    }
+
+    cascadeRevelation(tileCol: number, tileRow: number) {
+        if (!Extents.inMatrix(this.tiles, tileCol, tileRow)) {
+            // point must be inside tile matrix
+            console.log("not inside");
+            return;
+        }
+
+        if (this.getTileState(tileCol, tileRow) !== TileState.Unpressed &&
+            this.getTileState(tileCol, tileRow) !== TileState.Pressed) {
+            // can only cascade reveal for unrevealed tiles
+            console.log("already pressed");
+            return;
+        }
+
+        const revealedState = evaluateTile(tileCol, tileRow, this.mineMask);
+        this.changeTileValue(tileCol, tileRow, revealedState);
+
+        if (revealedState === TileState.Zero) {
+            NEIGHBOR_MATRIX.forEach(direction => {
+                const adjPoint = [tileCol + direction[0], tileRow + direction[1]];
+
+                if (Extents.inMatrix(this.tiles, adjPoint[0], adjPoint[1])) {
+                    this.cascadeRevelation(adjPoint[0], adjPoint[1]);
+                }
+            });
+        }
+    }
+
+    revealTile(tileCol: number, tileRow: number) {
+        if (this.isMine(tileCol, tileRow)) {
+            this.loseGame();
+
+        } else {
+            this.cascadeRevelation(tileCol, tileRow);
+        }
+    }
 
     handleLeftClick(canvasX: number, canvasY: number) {
         if (this.inHeader(canvasX, canvasY)) {
@@ -87,14 +136,6 @@ export default class Board {
                 this.boardState = BoardState.InProgress;
 
                 this.mineMask = generateMineMask(this.tiles, tileCol, tileRow, 99);
-
-                for (let i = 0; i < this.mineMask.length; i++) {
-                    for (let j = 0; j < this.mineMask[0].length; j++) {
-                        if (this.mineMask[i][j]) {
-                            this.changeTileValue(j, i, TileState.Mine);
-                        }
-                    }
-                }
             }
 
             // handle tile click
@@ -167,7 +208,7 @@ export default class Board {
             return;
         }
 
-        this.changeTileValue(tileCol, tileRow, TileState.Zero);
+        this.revealTile(tileCol, tileRow);
         this.selectedTile = null;
     }
 }

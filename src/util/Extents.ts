@@ -34,6 +34,17 @@ class Extents {
             this.height + (2 * padding)
         )
     }
+
+    static inMatrix(matrix: Array<Array<any>>, col: number, row: number) {
+        // assumes row, col index order
+        const width = matrix[0].length;
+        const height = matrix.length;
+
+        return col >= 0 &&
+            row >= 0 &&
+            col < width &&
+            row < height;
+    }
 }
 
 export default Extents;
