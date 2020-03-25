@@ -21,7 +21,8 @@ export enum TileState {
     Seven,
     Eight,
     Mine,
-    Flag
+    Flag,
+    ExplodedMine
 }
 
 const IMAGE_PATH_MAP = new Map<string, string>([
@@ -44,10 +45,11 @@ function createDrawProps(
 export function TileDrawMap(tileVal: number) {
     const tileDrawMap = new Map<TileState, TileDrawProps>([
         [TileState.Unpressed, createDrawProps("grey", "black", 2, null, null)],
-        [TileState.Pressed, createDrawProps("blue", "black", 2, null, null)],
+        [TileState.Pressed, createDrawProps("lightgray", "black", 2, null, null)],
         [TileState.Zero, createDrawProps("lightgray", "black", 2, null, null)],
         [TileState.Flag, createDrawProps("grey", "black", 2, null, "F")],
         [TileState.Mine, createDrawProps("grey", "black", 2, null, "M")],
+        [TileState.ExplodedMine, createDrawProps("red", "black", 2, null, "M")],
         [TileState.One, createDrawProps("lightgray", "black", 2, null, "1")],
         [TileState.Two, createDrawProps("lightgray", "black", 2, null, "2")],
         [TileState.Three, createDrawProps("lightgray", "black", 2, null, "3")],

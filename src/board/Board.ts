@@ -20,6 +20,8 @@ export default class Board {
     tiles: Array<Array<TileState>>;
     selectedTile: Array<number> | null;
     mineMask: Array<Array<boolean>> | null;
+    revealedTileCnt: number;
+    mineCnt: number;
 
     constructor(rowSize: number, colSize: number, boardCanvas: HTMLCanvasElement) {
         this.boardState = BoardState.Idle;
@@ -28,6 +30,7 @@ export default class Board {
         this.drawContext = createDrawContext(rowSize, colSize);
         this.tiles = createTiles(rowSize, colSize);
         this.mineMask = null;
+        this.revealedTileCnt = 0;
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
     }
@@ -38,6 +41,7 @@ export default class Board {
         this.tiles = createTiles(rowSize, colSize);
         boardDrawing.initialDraw(this.canvas, this.drawContext);
         this.boardState = BoardState.Idle;
+        this.revealedTileCnt = 0;
     }
 
     getTileInds(x: number, y: number) {
@@ -57,12 +61,12 @@ export default class Board {
             tileSize, tileSize);
     }
 
-    getSelectedState() {
-        return this.tiles[this.selectedTile[1]][this.selectedTile[0]];
-    }
-
     getTileState(tileCol: number, tileRow: number) {
         return this.tiles[tileRow][tileCol];
+    }
+
+    getSelectedState() {
+        return this.getTileState(this.selectedTile[0], this.selectedTile[1]);
     }
 
     inTiles(x: number, y: number) {
@@ -84,22 +88,46 @@ export default class Board {
     }
 
     loseGame() {
-        console.log("lost game");
+        this.boardState = BoardState.Lost;
+
+        // reveal the mines
+        for (let row = 0; row < this.mineMask.length; row++) {
+            for (let col = 0; col < this.mineMask[0].length; col++) {
+               const tileState = this.getTileState(col, row);
+               
+               if (this.mineMask[row][col] && tileState === TileState.Unpressed) {
+                   this.changeTileValue(col, row, TileState.Mine);
+               }
+            }
+        }
+    }
+
+    winGame() {
+        this.boardState = BoardState.Won;
+
+        console.log("wow, you won!");
     }
 
     cascadeRevelation(tileCol: number, tileRow: number) {
         if (!Extents.inMatrix(this.tiles, tileCol, tileRow)) {
             // point must be inside tile matrix
-            console.log("not inside");
             return;
         }
 
         if (this.getTileState(tileCol, tileRow) !== TileState.Unpressed &&
             this.getTileState(tileCol, tileRow) !== TileState.Pressed) {
             // can only cascade reveal for unrevealed tiles
-            console.log("already pressed");
             return;
         }
+
+        // revealing tile
+        this.revealedTileCnt += 1;
+
+        // check if game has been won
+        const totalTiles = this.tiles.length * this.tiles[0].length;
+        if (this.revealedTileCnt === totalTiles - this.mineCnt) {
+            this.winGame();
+        } 
 
         const revealedState = evaluateTile(tileCol, tileRow, this.mineMask);
         this.changeTileValue(tileCol, tileRow, revealedState);
@@ -117,6 +145,7 @@ export default class Board {
 
     revealTile(tileCol: number, tileRow: number) {
         if (this.isMine(tileCol, tileRow)) {
+            this.changeTileValue(tileCol, tileRow, TileState.ExplodedMine); 
             this.loseGame();
 
         } else {
@@ -130,12 +159,15 @@ export default class Board {
             this.reset();
 
         } else if (this.inTiles(canvasX, canvasY)) {
+            if (this.boardState === BoardState.Lost) { return; }
+
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
             if (this.boardState === BoardState.Idle) {
                 // first click of the game, generate mines
                 this.boardState = BoardState.InProgress;
 
-                this.mineMask = generateMineMask(this.tiles, tileCol, tileRow, 99);
+                this.mineMask = generateMineMask(this.tiles, tileCol, tileRow, 10);
+                this.mineCnt = 10;
             }
 
             // handle tile click
@@ -150,14 +182,28 @@ export default class Board {
 
     handleRightClick(canvasX: number, canvasY: number) {
         if (this.inTiles(canvasX, canvasY)) {
+            if (this.boardState === BoardState.Lost) { return; }
+
             // handle flag placement with right click
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
-            this.changeTileValue(tileCol, tileRow, TileState.Flag);
+            const clickState = this.getTileState(tileCol, tileRow);
+
+            if (clickState === TileState.Unpressed) {
+                // place flag
+                this.changeTileValue(tileCol, tileRow, TileState.Flag);
+
+            } else if (clickState === TileState.Flag) {
+                // remove flag
+                this.changeTileValue(tileCol, tileRow, TileState.Unpressed);
+            }
+
         }
     }
 
     handleMouseDrag(canvasX: number, canvasY: number) {
         if (!this.inTiles(canvasX, canvasY)) {
+            if (this.boardState === BoardState.Lost) { return; }
+
             // dragged off of board
             if (this.selectedTile != null && this.getSelectedState() === TileState.Pressed) {
                 const [selectedCol, selectedRow] = this.selectedTile;
@@ -200,13 +246,12 @@ export default class Board {
             // in the rare case where the drag event doesn't fire to
             // change the currently pressed tile to the one where
             // mouse up fired, it still needs to be unpressed
-            console.log("caught missed drag correction");
             this.changeTileValue(this.selectedTile[0], this.selectedTile[1], TileState.Unpressed);
         }
 
-        if (!this.inTiles(canvasX, canvasY)) {
-            return;
-        }
+        // ignore if not in tiles or game is currently lost
+        if (!this.inTiles(canvasX, canvasY)) { return; }
+        if (this.boardState === BoardState.Lost) { return; }
 
         this.revealTile(tileCol, tileRow);
         this.selectedTile = null;
