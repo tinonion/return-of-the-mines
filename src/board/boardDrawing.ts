@@ -1,5 +1,4 @@
 import Extents from "../util/Extents"
-import { TileDrawMap } from "./tile/tileDrawing";
 import { DrawContext } from "./DrawContext";
 
 const TILE_BORDER_THICKNESS = 2;
@@ -55,51 +54,4 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
     }
 }
 
-function redrawTile(
-    tileExtents: Extents, tileCanvas: HTMLCanvasElement, tileVal: number, drawContext: DrawContext) {
-    const tileDrawProps = TileDrawMap(tileVal);
-    
-    let ctx = tileCanvas.getContext('2d');
-
-    const color = tileDrawProps.baseColor;
-    ctx.fillStyle = color;
-
-    ctx.beginPath();
-    ctx.fillRect(tileExtents.left, tileExtents.top, 
-        tileExtents.width, tileExtents.height);
-    ctx.stroke();
-
-    ctx.lineWidth = TILE_BORDER_THICKNESS;
-    ctx.beginPath();
-    ctx.rect(tileExtents.left, tileExtents.top, 
-        tileExtents.width, tileExtents.height);
-    ctx.stroke();
-
-    if (tileDrawProps.tileText != null) {
-        const tileSize = drawContext.tileSize;
-
-        ctx.font = String(tileSize - 10) + "px bold Arial";
-        ctx.fillStyle = "black";
-        ctx.textAlign = "center";
-
-        const x = tileExtents.left + (tileSize / 2);
-        const y = tileExtents.top + (tileSize / 2) + 5;
-        ctx.fillText(tileDrawProps.tileText, x, y);
-    }
-
-    /*
-    if (tileDrawProps.imagePath != null) {
-        // copy image into new one and assign load callback
-        let img = new Image();
-        img.src = tileDrawProps.imagePath
-
-        const tileSize = drawContext.tileSize;
-        img.onload = function () {
-            ctx.drawImage(img,
-            tileExtents.left, tileExtents.top,
-            tileSize, tileSize);
-        }
-    } */
-}
-
-export { initialDraw, redrawTile }
+export { initialDraw, TILE_BORDER_THICKNESS };
