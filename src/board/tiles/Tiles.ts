@@ -91,7 +91,11 @@ export default class Tiles {
     }
 
     revealTile(tileCol: number, tileRow: number) {
-        if (this.isMine(tileCol, tileRow)) {
+        const tileState = this.getTileState(tileCol, tileRow);
+        if (tileState !== TileState.Unpressed && tileState !== TileState.Pressed) {
+            return;
+
+        } else if (this.isMine(tileCol, tileRow)) {
             this.changeTileState(tileCol, tileRow, TileState.ExplodedMine); 
             this.board.loseGame();
 
@@ -100,4 +104,42 @@ export default class Tiles {
         }
     }
 
+    canSpaceReveal(tileCol: number, tileRow: number, tileState: TileState) {
+        if (tileState < TileState.One || tileState > TileState.Eight) { return; }
+
+        let neededFlags = tileState - TileState.Zero;
+        NEIGHBOR_MATRIX.forEach(direction => {
+            const adjPoint = [tileCol + direction[0], tileRow + direction[1]];
+
+            if (!Extents.inMatrix(this.tileStates, adjPoint[0], adjPoint[1])) {
+                return;
+            }
+
+            if (this.getTileState(adjPoint[0], adjPoint[1]) === TileState.Flag) {
+                neededFlags -= 1;
+            }
+        });
+
+        return neededFlags === 0;
+    }
+
+    spaceRevealTile(tileCol: number, tileRow: number) {
+        const tileState = this.getTileState(tileCol, tileRow);
+
+        if (tileState === TileState.Unpressed) {
+            this.changeTileState(tileCol, tileRow, TileState.Flag);
+
+        } else if (tileState === TileState.Flag) {
+            this.changeTileState(tileCol, tileRow, TileState.Unpressed);
+
+        } else if (this.canSpaceReveal(tileCol, tileRow, tileState)) {
+            NEIGHBOR_MATRIX.forEach(direction => {
+                const [adjCol, adjRow] = [tileCol + direction[0], tileRow + direction[1]];
+
+                if (Extents.inMatrix(this.tileStates, adjCol, adjRow)) {
+                    this.revealTile(adjCol, adjRow);
+                }
+            });
+        } 
+    }
 }

@@ -29,9 +29,9 @@ enum TileState {
     ExplodedMine
 }
 
-const IMAGE_PATH_MAP = new Map<string, string>([
+/*const IMAGE_PATH_MAP = new Map<string, string>([
     ["flag", "/board_images/red_dot.png"]
-]);
+]);*/
 
 function createDrawProps(
     baseColor: string, borderColor: string, 

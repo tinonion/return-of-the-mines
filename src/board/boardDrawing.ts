@@ -1,4 +1,3 @@
-import Extents from "../util/Extents"
 import { DrawContext } from "./DrawContext";
 
 const TILE_BORDER_THICKNESS = 2;

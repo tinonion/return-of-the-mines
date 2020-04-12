@@ -184,9 +184,19 @@ export default class Board {
 
         // ignore if not in tiles or game is currently lost
         if (!this.inTiles(canvasX, canvasY)) { return; }
-        if (this.boardState === BoardState.Lost) { return; }
+        if (this.boardState === BoardState.Lost ||
+            this.boardState === BoardState.Won) { return; }
 
         this.tiles.revealTile(tileCol, tileRow);
         this.selectedTile = null;
+    }
+
+    handleSpaceDown(canvasX: number, canvasY: number) {
+        if (!this.inTiles(canvasX, canvasY)) { return; }
+        if (this.boardState === BoardState.Lost ||
+            this.boardState === BoardState.Won) { return; }
+
+        const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
+        this.tiles.spaceRevealTile(tileCol, tileRow)
     }
 }

@@ -1,18 +1,29 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 import "./Board.css";
 import { inferCanvasSize } from "../board/DrawContext";
+import { KeyboardSentinel } from "../events/KeyboardSentinel";
 import Board from "../board/Board"
 
 interface BoardProps {
     rowSize: number;
     colSize: number;
+    keyboardSentinel: KeyboardSentinel;
 }
+
+const SPACEBAR = 32;
 
 export function RBoard(props: BoardProps) {
     let board: Board;
 
     const canvasRef = useRef(null);
+
+    // used for mounting component and initing keyboard event listener
+    useEffect(() => { 
+        props.keyboardSentinel.addTarget(handleKeyDown);
+
+        return () => { console.log("unmounted"); };
+    });
 
     const createBoard = useCallback(tileCanvas => {
         tileCanvas.oncontextmenu = function (e: any) {
@@ -28,6 +39,12 @@ export function RBoard(props: BoardProps) {
         // refs general client coords to canvas
         const canvasBounds = canvasRef.current.getBoundingClientRect();
         return [x - canvasBounds.x, y - canvasBounds.y];
+    }
+
+    function isPointInCanvas(x: number, y: number) {
+        // takes a point already refed to canvas
+        const bounds = canvasRef.current.getBoundingClientRect();
+        return (x >= 0 && y >= 0 && x < bounds.width && y < bounds.height);
     }
 
     function handleMouseDown(e: React.MouseEvent) {
@@ -53,6 +70,15 @@ export function RBoard(props: BoardProps) {
             // reveal currently selected tile
             const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
             board.handleMouseUp(canvasX, canvasY);
+        }
+    }
+
+    function handleKeyDown(e: KeyboardEvent, clientX: number, clientY: number) {
+        const [x, y] = refToCanvas(clientX, clientY);
+        if (!isPointInCanvas(x, y)) { return; }
+
+        if (e.keyCode === SPACEBAR) {
+            board.handleSpaceDown(x, y);
         }
     }
 
