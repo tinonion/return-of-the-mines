@@ -2,25 +2,24 @@ import React, { useEffect, useRef, useCallback } from 'react';
 
 import "./Board.css";
 import { inferCanvasSize } from "../board/DrawContext";
-import { KeyboardSentinel } from "../events/KeyboardSentinel";
+import createLocalizedKeyListener from "../events/KeyboardSentinel";
 import Board from "../board/Board"
 
 interface BoardProps {
     rowSize: number;
     colSize: number;
-    keyboardSentinel: KeyboardSentinel;
 }
 
 const SPACEBAR = 32;
 
-export function RBoard(props: BoardProps) {
+export default function RBoard(props: BoardProps) {
     let board: Board;
 
     const canvasRef = useRef(null);
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        props.keyboardSentinel.addTarget(handleKeyDown);
+        createLocalizedKeyListener(handleKeyDown);
 
         return () => { console.log("unmounted"); };
     });

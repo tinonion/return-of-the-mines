@@ -36,6 +36,10 @@ export default class Board {
         this.boardState = BoardState.Idle;
     }
 
+    isBoardLocked() {
+        return (this.boardState === BoardState.Lost || this.boardState === BoardState.Won);
+    }
+
     getSelectedState() {
         return this.tiles.getTileState(this.selectedTile[0], this.selectedTile[1]);
     }
@@ -86,10 +90,7 @@ export default class Board {
             // handle clicking the header
             this.reset();
 
-        } else if (this.inTiles(canvasX, canvasY)) {
-            if (this.boardState === BoardState.Lost ||
-                this.boardState === BoardState.Won) { return; }
-
+        } else if (this.inTiles(canvasX, canvasY) && !this.isBoardLocked()) {
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
             if (this.boardState === BoardState.Idle) {
                 // first click of the game, generate mines
@@ -109,9 +110,9 @@ export default class Board {
     }
 
     handleRightClick(canvasX: number, canvasY: number) {
-        if (this.inTiles(canvasX, canvasY)) {
-            if (this.boardState === BoardState.Lost) { return; }
+        if (this.isBoardLocked()) { return; }
 
+        if (this.inTiles(canvasX, canvasY)) {
             // handle flag placement with right click
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
             const tiles = this.tiles;
@@ -130,9 +131,9 @@ export default class Board {
     }
 
     handleMouseDrag(canvasX: number, canvasY: number) {
-        if (!this.inTiles(canvasX, canvasY)) {
-            if (this.boardState === BoardState.Lost) { return; }
+        if (this.isBoardLocked()) { return; }
 
+        if (!this.inTiles(canvasX, canvasY)) {
             const tiles = this.tiles;
 
             // dragged off of board
