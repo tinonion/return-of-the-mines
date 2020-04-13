@@ -70,6 +70,7 @@ function drawTile(
     const tileDrawProps = TILE_DRAW_MAP.get(tileVal);
     
     let ctx = tileCanvas.getContext('2d');
+    ctx.save();
 
     const color = tileDrawProps.baseColor;
     ctx.fillStyle = color;
@@ -110,6 +111,8 @@ function drawTile(
             tileSize, tileSize);
         }
     } */
+
+    ctx.restore();
 }
 
 export { TileState, TILE_DRAW_MAP, drawTile };

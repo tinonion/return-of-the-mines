@@ -11,6 +11,7 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
     // all drawing coords are relative to canvas
     // fill solid rectangle
     let ctx = tileCanvas.getContext('2d');
+    ctx.save();
     ctx.fillStyle = 'grey';
     ctx.fillRect(0, 0, width, height);
 
@@ -51,6 +52,28 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
         ctx.lineTo(width, rowY);
         ctx.stroke();
     }
+
+    ctx.restore();
 }
 
-export { initialDraw, TILE_BORDER_THICKNESS };
+function drawQuickMenu(canvas: HTMLCanvasElement, drawContext: DrawContext) {
+    const tileExtents = drawContext.tileExtents;    
+
+    let ctx = canvas.getContext("2d");
+    ctx.save();
+
+    ctx.fillStyle = 'black';
+    ctx.globalAlpha = 0.7;
+    ctx.fillRect(tileExtents.left, 
+                 tileExtents.top, 
+                 tileExtents.width, 
+                 tileExtents.height);
+
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "lightgrey";
+    ctx.fillText("<c+n> Restart", tileExtents.left + 30, tileExtents.top + 100);
+
+    ctx.restore();
+}
+
+export { initialDraw, drawQuickMenu, TILE_BORDER_THICKNESS };

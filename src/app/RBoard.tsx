@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 
-import "./Board.css";
+import "./css/Board.css";
 import { inferCanvasSize } from "../board/DrawContext";
 import createLocalizedKeyListener from "../events/KeyboardSentinel";
 import Board from "../board/Board"
@@ -11,6 +11,8 @@ interface BoardProps {
 }
 
 const SPACEBAR = 32;
+const C_KEY = 67;
+const N_KEY = 78;
 
 export default function RBoard(props: BoardProps) {
     let board: Board;
@@ -19,7 +21,7 @@ export default function RBoard(props: BoardProps) {
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        createLocalizedKeyListener(handleKeyDown);
+        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
 
         return () => { console.log("unmounted"); };
     });
@@ -78,6 +80,18 @@ export default function RBoard(props: BoardProps) {
 
         if (e.keyCode === SPACEBAR) {
             board.handleSpaceDown(x, y);
+
+        } else if (e.keyCode === C_KEY) {
+            board.showQuickMenu();
+
+        } else if (e.keyCode === N_KEY) {
+            board.handleNKeyDown();
+        }
+    }
+
+    function handleKeyUp(e: KeyboardEvent, clientX: number, clientY: number) {
+        if (e.keyCode === C_KEY) {
+            board.hideQuickMenu();
         }
     }
 

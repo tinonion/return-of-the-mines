@@ -1,11 +1,13 @@
 import * as React from "react";
-import "Header.css";
+import "./css/Header.css";
 
 export default function RHeader() {
 
     return (
-        <header className="navBar">
-
-        </header>
+        <div className="navBar">
+            <p className="navTitle">
+                Return of the Mines!
+            </p>
+        </div>
     )
 }

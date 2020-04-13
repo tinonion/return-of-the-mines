@@ -6,22 +6,29 @@ import * as tileDrawing from "./tiles/tileDrawing";
 import Extents from "../util/Extents";
 import * as arrayUtil from "../util/arrayUtil";
 
-enum BoardState {
+enum GameState {
     Idle,
     InProgress,
     Lost,
-    Won
+    Won,
+    QuickMenu
+}
+
+interface BoardSave {
+    gameState: GameState;
+    imageData: ImageData;
 }
 
 export default class Board {
-    boardState: BoardState;
+    gameState: GameState;
     canvas: HTMLCanvasElement;
     drawContext: DrawContext;
     tiles: Tiles;
     selectedTile: Array<number> | null;
+    save: BoardSave | null;
 
     constructor(rowSize: number, colSize: number, boardCanvas: HTMLCanvasElement) {
-        this.boardState = BoardState.Idle;
+        this.gameState = GameState.Idle;
         this.canvas = boardCanvas;
         this.drawContext = createDrawContext(rowSize, colSize);
         this.tiles = new Tiles(rowSize, colSize, this);
@@ -33,11 +40,34 @@ export default class Board {
         this.tiles.reset();
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
-        this.boardState = BoardState.Idle;
+        this.gameState = GameState.Idle;
+    }
+
+    saveState() {
+        const canvasRect = this.canvas.getBoundingClientRect();
+        let ctx = this.canvas.getContext("2d");
+
+        const imageData = ctx.getImageData(0, 0, canvasRect.width, canvasRect.height);
+
+        this.save = { gameState: this.gameState, imageData: imageData };
+    }
+
+    restoreState() {
+        if (this.save == null) {
+            console.log("saved state was null");
+            return;
+        }
+
+        const save = this.save;
+        const ctx = this.canvas.getContext("2d");
+
+        this.gameState = save.gameState;
+        ctx.putImageData(save.imageData, 0, 0);
     }
 
     isBoardLocked() {
-        return (this.boardState === BoardState.Lost || this.boardState === BoardState.Won);
+        return (this.gameState === GameState.Lost || this.gameState === GameState.Won
+                || this.gameState === GameState.QuickMenu);
     }
 
     getSelectedState() {
@@ -76,13 +106,27 @@ export default class Board {
 
     loseGame() {
         this.tiles.revealMines();
-        this.boardState = BoardState.Lost;
+        this.gameState = GameState.Lost;
     }
 
     winGame() {
-        this.boardState = BoardState.Won;
+        this.gameState = GameState.Won;
 
         console.log("wow, you won!");
+    }
+
+    showQuickMenu() {
+        if (this.gameState === GameState.QuickMenu) { return; }
+
+        this.saveState();
+        this.gameState = GameState.QuickMenu;
+        boardDrawing.drawQuickMenu(this.canvas, this.drawContext);
+    }
+
+    hideQuickMenu() {
+        if (this.gameState !== GameState.QuickMenu) { return; }
+
+        this.restoreState();
     }
 
     handleLeftClick(canvasX: number, canvasY: number) {
@@ -92,9 +136,9 @@ export default class Board {
 
         } else if (this.inTiles(canvasX, canvasY) && !this.isBoardLocked()) {
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
-            if (this.boardState === BoardState.Idle) {
+            if (this.gameState === GameState.Idle) {
                 // first click of the game, generate mines
-                this.boardState = BoardState.InProgress;
+                this.gameState = GameState.InProgress;
 
                 this.tiles.placeMines(tileCol, tileRow, 10);
             }
@@ -185,8 +229,8 @@ export default class Board {
 
         // ignore if not in tiles or game is currently lost
         if (!this.inTiles(canvasX, canvasY)) { return; }
-        if (this.boardState === BoardState.Lost ||
-            this.boardState === BoardState.Won) { return; }
+        if (this.gameState === GameState.Lost ||
+            this.gameState === GameState.Won) { return; }
 
         this.tiles.revealTile(tileCol, tileRow);
         this.selectedTile = null;
@@ -194,10 +238,16 @@ export default class Board {
 
     handleSpaceDown(canvasX: number, canvasY: number) {
         if (!this.inTiles(canvasX, canvasY)) { return; }
-        if (this.boardState === BoardState.Lost ||
-            this.boardState === BoardState.Won) { return; }
+        if (this.gameState === GameState.Lost ||
+            this.gameState === GameState.Won) { return; }
 
         const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
         this.tiles.spaceRevealTile(tileCol, tileRow)
+    }
+
+    handleNKeyDown() {
+        if (this.gameState === GameState.QuickMenu) {
+            this.reset();
+        }
     }
 }
