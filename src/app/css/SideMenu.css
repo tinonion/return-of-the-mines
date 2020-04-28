@@ -1,0 +1,31 @@
+.side-menu {
+    background-color: lightgrey;
+    position: absolute;
+    top: 50px;
+    display: inline-block;
+}
+
+.sub-menu {
+    background-color: grey;
+    margin: 10px 10px 10px 0px;
+    width: 180px;
+    height: 200px;
+    display: block;
+}
+
+.sub-menu-title {
+    position: relative;
+    top: 8px;
+    left: 8px;
+    text-decoration: underline;
+    font-size: 16px;
+    font-family: Helvetica;
+    display: block;
+}
+
+.strip-button {
+    position: relative;
+    top: 12px;
+    padding: 0px, 8px, 8px, 0px;
+    display: inline-block;
+}

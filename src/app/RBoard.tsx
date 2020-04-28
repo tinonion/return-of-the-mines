@@ -1,21 +1,18 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 
 import "./css/Board.css";
 import { inferCanvasSize } from "../board/DrawContext";
 import createLocalizedKeyListener from "../events/KeyboardSentinel";
 import Board from "../board/Board"
 
-interface BoardProps {
-    rowSize: number;
-    colSize: number;
-}
-
 const SPACEBAR = 32;
 const C_KEY = 67;
 const N_KEY = 78;
 
-export default function RBoard(props: BoardProps) {
+export default function RBoard() {
     let board: Board;
+    let [colCount, setColCount] = useState(30);
+    let [rowCount, setRowCount] = useState(16);
 
     const canvasRef = useRef(null);
 
@@ -33,7 +30,7 @@ export default function RBoard(props: BoardProps) {
         }
 
         canvasRef.current = tileCanvas;
-        board = new Board(props.rowSize, props.colSize, canvasRef.current);
+        board = new Board(colCount, rowCount, canvasRef.current);
     }, []);
 
     function refToCanvas(x: number, y: number) {
@@ -95,7 +92,7 @@ export default function RBoard(props: BoardProps) {
         }
     }
 
-    const [width, height] = inferCanvasSize(props.rowSize, props.colSize);
+    const [width, height] = inferCanvasSize(colCount, rowCount);
     return (
         <canvas id="tileCanvas"
                 className="board"
