@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 
-import "./css/Board.css";
-import { inferCanvasSize } from "../board/DrawContext";
-import createLocalizedKeyListener from "../events/KeyboardSentinel";
-import Board from "../board/Board"
+import "../css/Board.css";
+import { inferCanvasSize } from "../../board/DrawContext";
+import createLocalizedKeyListener from "../../events/KeyboardSentinel";
+import Board from "../../board/Board"
 
 const SPACEBAR = 32;
 const C_KEY = 67;

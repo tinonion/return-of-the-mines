@@ -1,42 +1,53 @@
 import React, { useState, ChangeEvent } from "react";
 
 import { Difficulty, DIFFICULTY_MAP, DifficultyOptions } from "../../board/difficulty";
-import { validateRange } from "../../util/validation";
 import ROptionToggle from "./ROptionToggle";
 import ROptionField from "./ROptionField";
 import ROptionButton from "./ROptionButton";
+import { Options, OptionPair } from "./RGame";
 
 import "../css/OptionsBar.css";
 
-interface OptionFields {
-    colCount: string,
-    rowCount: string,
-    mineCount: string
+interface OptionsBarProps {
+    changeOptions: (newOptionPairs: Array<OptionPair>)
+        => void,
+    options: Options,
 }
 
-export default function ROptionsBar() {
-    const [difficulty, setDifficulty] = useState(Difficulty.Expert);
-    const [optionFields, setOptionFields] = useState({
-        colCount: "30",
-        rowCount: "16",
-        mineCount: "99"
-    });
+export default function ROptionsBar(props: OptionsBarProps) {
+    function changeDifficulty(newDifficulty: Difficulty) {
+        let newOptionPairs = new Array<OptionPair>(); 
+        newOptionPairs.push(["difficulty", newDifficulty])
 
-    function changeOptionField(qualifier: keyof OptionFields, e: ChangeEvent<HTMLInputElement>, maxInputLength: number) {
+        if (newDifficulty !== Difficulty.Custom) { 
+            const difficultyOptions = DIFFICULTY_MAP.get(newDifficulty);
+
+            for (let pair of Object.entries(difficultyOptions)) {
+                const optionKey = pair[0] as keyof Options;
+                const newValue = pair[1];
+
+                newOptionPairs.push([optionKey, newValue]);
+            }
+        }
+
+        props.changeOptions(newOptionPairs);
+    }
+
+    function changeOptionField(qualifier: keyof Options, e: ChangeEvent<HTMLInputElement>, maxInputLength: number) {
         let newValue = e.currentTarget.value;
         if (newValue.length > maxInputLength) {
             newValue = newValue.substring(0, maxInputLength);
         } 
 
-        let newOptions = Object.assign({}, optionFields);
-        newOptions[qualifier] = newValue;
-        setOptionFields(newOptions); 
+        props.changeOptions([[qualifier, newValue]]); 
     }
 
-    let difficultySelections = new Array<boolean>(false, false, false, false);
-    difficultySelections[difficulty] = true;
+    let options = props.options;
 
-    const enableDifficultyInput = difficulty === Difficulty.Custom;
+    let difficultySelections = new Array<boolean>(false, false, false, false);
+    difficultySelections[options.difficulty] = true;
+
+    const enableDifficultyInput = options.difficulty === Difficulty.Custom;
 
     return (
         <div className="options-bar">
@@ -47,39 +58,39 @@ export default function ROptionsBar() {
                 <ROptionToggle text="Beginner"
                                selected={difficultySelections[0]}
                                handleClick={() => 
-                                    { setDifficulty(Difficulty.Beginner); }}/>
+                                    { changeDifficulty(Difficulty.Beginner); }}/>
                 <ROptionToggle text="Intermediate"
                                selected={difficultySelections[1]}
                                handleClick={() => 
-                                    { setDifficulty(Difficulty.Intermediate); }}/>
+                                    { changeDifficulty(Difficulty.Intermediate); }}/>
                 <ROptionToggle text="Expert"
                                selected={difficultySelections[2]}
                                handleClick={() => 
-                                    { setDifficulty(Difficulty.Expert); }}/>
+                                    { changeDifficulty(Difficulty.Expert); }}/>
                 <ROptionToggle text="Custom"
                                selected={difficultySelections[3]}
                                handleClick={() => 
-                                    { setDifficulty(Difficulty.Custom); }}/>
+                                    { changeDifficulty(Difficulty.Custom); }}/>
                 <br/>
                 <div className="horizontal-space"/>
                 <ROptionField enableInput={enableDifficultyInput}
                               text="Width"
                               maxInputLength={2}
-                              value={optionFields.colCount}
+                              value={options.colCount}
                               onChange={(e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => {
                                   changeOptionField("colCount", e, maxInputLength);
                               }}/>
                 <ROptionField enableInput={enableDifficultyInput}
                               text="Height"
                               maxInputLength={2}
-                              value={optionFields.rowCount}
+                              value={options.rowCount}
                               onChange={(e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => {
                                     changeOptionField("rowCount", e, maxInputLength);
                               }}/>                              
                 <ROptionField enableInput={enableDifficultyInput}
                               text="Mines"
                               maxInputLength={4}
-                              value={optionFields.mineCount}
+                              value={options.mineCount}
                               onChange={(e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => {
                                     changeOptionField("mineCount", e, maxInputLength);
                               }}/>
