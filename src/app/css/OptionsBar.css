@@ -1,7 +1,6 @@
 .options-bar {
     background-color: lightgrey;
     margin: 10px;
-    width: 50%;
     display: flex;
 }
 
@@ -20,4 +19,8 @@
 
 .strip-button {
     margin-top: 10px;
+}
+
+.horizontal-space {
+    height: 10px;
 }

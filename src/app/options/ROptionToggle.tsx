@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./css/OptionButton.css";
+import "../css/OptionToggle.css";
 
 interface OptionButtonProps {
     text: string;
@@ -8,11 +8,11 @@ interface OptionButtonProps {
     handleClick: VoidFunction;
 }
 
-export default function ROptionButton(props: OptionButtonProps) {
+export default function ROptionToggle(props: OptionButtonProps) {
     const selectedDescriptor = props.selected ? "selected" : "not-selected";
 
     return (
-        <div className={"option-button " + selectedDescriptor} 
+        <div className={"option-toggle " + selectedDescriptor} 
             onClick={props.handleClick}>
             {props.text}
         </div>

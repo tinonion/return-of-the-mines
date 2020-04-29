@@ -1,16 +1,14 @@
 .option-button {
-    margin-top: 8px;
-    font-family: Helvetica;
-    font-size: 14px;
-    padding: 3px;
-    display: inline-block;
-    cursor: pointer;
-}
-
-.not-selected {
     background-color: white;
+    border: none;
+    margin-left: 10px;
+    display: inline;
 }
 
-.selected {
+.option-button:hover {
     background-color: lightgrey;
+}
+
+.option-button:active {
+    background-color: lightgreen;
 }

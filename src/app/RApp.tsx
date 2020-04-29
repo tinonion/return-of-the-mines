@@ -1,10 +1,8 @@
 import * as React from "react";
 import "./css/App.css";
 
-import RHeader from "./RHeader";
 import RBoard from "./RBoard";
-import RSideMenu from "./RSideMenu";
-import ROptionsBar from "./ROptionsBar";
+import ROptionsBar from "./options/ROptionsBar";
 
 export default function App() {
     return (
@@ -12,5 +10,5 @@ export default function App() {
             <ROptionsBar/>
             <RBoard/>
         </div>
-    )
+    );
 }
