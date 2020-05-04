@@ -4,33 +4,49 @@ import "../css/Board.css";
 import { inferCanvasSize } from "../../board/DrawContext";
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
 import Board from "../../board/Board"
+import { Options } from '../../options/Options';
 
 const SPACEBAR = 32;
 const C_KEY = 67;
 const N_KEY = 78;
 
-export default function RBoard() {
+interface BoardProps {
+    options: Options
+}
+
+export function boardPropsAreEqual(props1: BoardProps, props2: BoardProps) {
+    console.log("props compare", props1.options === props2.options);
+    return props1.options === props2.options;
+}
+
+export default function RBoard(props: BoardProps) {
     let board: Board;
-    let [colCount, setColCount] = useState(30);
-    let [rowCount, setRowCount] = useState(16);
+    const options = props.options;
+    const colCount = options.colCount;
+    const rowCount = options.rowCount;
+    const mineCount = options.mineCount;
 
     const canvasRef = useRef(null);
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
+        console.log("mounting board");
+        board = new Board(colCount, rowCount, mineCount, canvasRef.current);
 
-        return () => { console.log("unmounted"); };
+        // for unmounting board
+        return () => {};
     });
 
     const createBoard = useCallback(tileCanvas => {
+        if (tileCanvas == null) { return; }
+
+        canvasRef.current = tileCanvas;
+        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
+
         tileCanvas.oncontextmenu = function (e: any) {
             // disable context menu on right click
             e.preventDefault();
         }
-
-        canvasRef.current = tileCanvas;
-        board = new Board(colCount, rowCount, canvasRef.current);
     }, []);
 
     function refToCanvas(x: number, y: number) {

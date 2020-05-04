@@ -1,53 +1,56 @@
 import React, { useState, ChangeEvent } from "react";
 
-import { Difficulty, DIFFICULTY_MAP, DifficultyOptions } from "../../board/difficulty";
+import { Difficulty, DIFFICULTY_MAP, DifficultyOptions } from "../../options/difficulty";
 import ROptionToggle from "./ROptionToggle";
 import ROptionField from "./ROptionField";
 import ROptionButton from "./ROptionButton";
-import { Options, OptionPair } from "./RGame";
 
 import "../css/OptionsBar.css";
+import { OptionPair, OptionFields, defaultOptionFields } from "../../options/OptionFields";
 
 interface OptionsBarProps {
-    changeOptions: (newOptionPairs: Array<OptionPair>)
-        => void,
-    options: Options,
+    commitOptions: (o: OptionFields) => void
 }
 
 export default function ROptionsBar(props: OptionsBarProps) {
+    const [optionFields, setOptionFields] = useState(defaultOptionFields());
+
     function changeDifficulty(newDifficulty: Difficulty) {
-        let newOptionPairs = new Array<OptionPair>(); 
-        newOptionPairs.push(["difficulty", newDifficulty])
+        let newOptions: OptionFields = Object.assign({}, optionFields);
+        newOptions["difficulty"] = newDifficulty;
 
         if (newDifficulty !== Difficulty.Custom) { 
             const difficultyOptions = DIFFICULTY_MAP.get(newDifficulty);
 
             for (let pair of Object.entries(difficultyOptions)) {
-                const optionKey = pair[0] as keyof Options;
+                const optionKey = pair[0] as keyof OptionFields;
                 const newValue = pair[1];
 
-                newOptionPairs.push([optionKey, newValue]);
+                // @ts-ignore
+                newOptions[optionKey] = newValue;
             }
         }
 
-        props.changeOptions(newOptionPairs);
+        setOptionFields(newOptions);
     }
 
-    function changeOptionField(qualifier: keyof Options, e: ChangeEvent<HTMLInputElement>, maxInputLength: number) {
+    function changeOptionField(qualifier: keyof OptionFields, e: ChangeEvent<HTMLInputElement>, maxInputLength: number) {
+        let newOptions: OptionFields = Object.assign({}, optionFields);
+
         let newValue = e.currentTarget.value;
         if (newValue.length > maxInputLength) {
             newValue = newValue.substring(0, maxInputLength);
         } 
 
-        props.changeOptions([[qualifier, newValue]]); 
+        // @ts-ignore
+        newOptions[qualifier] = newValue;
+        setOptionFields(newOptions);
     }
 
-    let options = props.options;
-
     let difficultySelections = new Array<boolean>(false, false, false, false);
-    difficultySelections[options.difficulty] = true;
+    difficultySelections[optionFields.difficulty] = true;
 
-    const enableDifficultyInput = options.difficulty === Difficulty.Custom;
+    const enableDifficultyInput = optionFields.difficulty === Difficulty.Custom;
 
     return (
         <div className="options-bar">
@@ -76,25 +79,26 @@ export default function ROptionsBar(props: OptionsBarProps) {
                 <ROptionField enableInput={enableDifficultyInput}
                               text="Width"
                               maxInputLength={2}
-                              value={options.colCount}
+                              value={optionFields.colCount}
                               onChange={(e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => {
                                   changeOptionField("colCount", e, maxInputLength);
                               }}/>
                 <ROptionField enableInput={enableDifficultyInput}
                               text="Height"
                               maxInputLength={2}
-                              value={options.rowCount}
+                              value={optionFields.rowCount}
                               onChange={(e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => {
                                     changeOptionField("rowCount", e, maxInputLength);
                               }}/>                              
                 <ROptionField enableInput={enableDifficultyInput}
                               text="Mines"
                               maxInputLength={4}
-                              value={options.mineCount}
+                              value={optionFields.mineCount}
                               onChange={(e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => {
                                     changeOptionField("mineCount", e, maxInputLength);
                               }}/>
-                <ROptionButton onClick={() => {}}/>
+                <ROptionButton text="*"
+                               onClick={(e) => { props.commitOptions(optionFields); }}/>
             </span>
             <span className="options-section">
                 <div className="section-title">

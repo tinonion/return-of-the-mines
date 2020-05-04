@@ -27,11 +27,11 @@ export default class Board {
     selectedTile: Array<number> | null;
     save: BoardSave | null;
 
-    constructor(rowSize: number, colSize: number, boardCanvas: HTMLCanvasElement) {
+    constructor(rowSize: number, colSize: number, mineCount: number, boardCanvas: HTMLCanvasElement) {
         this.gameState = GameState.Idle;
         this.canvas = boardCanvas;
         this.drawContext = createDrawContext(rowSize, colSize);
-        this.tiles = new Tiles(rowSize, colSize, this);
+        this.tiles = new Tiles(rowSize, colSize, mineCount, this);
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
     }
@@ -140,7 +140,7 @@ export default class Board {
                 // first click of the game, generate mines
                 this.gameState = GameState.InProgress;
 
-                this.tiles.placeMines(tileCol, tileRow, 10);
+                this.tiles.placeMines(tileCol, tileRow);
             }
 
             // handle tile click

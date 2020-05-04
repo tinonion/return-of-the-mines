@@ -11,11 +11,12 @@ export default class Tiles {
     revealedTileCnt: number;
     mineCnt: number;
 
-    constructor(rowSize: number, colSize: number, board: Board) {
+    constructor(rowSize: number, colSize: number, mineCount: number, board: Board) {
         this.board = board;
         this.tileStates = createTiles(rowSize, colSize);
         this.mineMask = null;
         this.revealedTileCnt = 0;
+        this.mineCnt = mineCount;
     }
 
     reset() {
@@ -38,9 +39,8 @@ export default class Tiles {
         this.board.drawTile(tileCol, tileRow, newState);
     }
 
-    placeMines(clickCol: number, clickRow: number, mineCnt: number) {
-        this.mineCnt = mineCnt;
-        this.mineMask = generateMineMask(this.tileStates, clickCol, clickRow, mineCnt);
+    placeMines(clickCol: number, clickRow: number) {
+        this.mineMask = generateMineMask(this.tileStates, clickCol, clickRow, this.mineCnt);
     }
 
     revealMines() {
