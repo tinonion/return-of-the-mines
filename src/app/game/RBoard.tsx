@@ -4,14 +4,14 @@ import "../css/Board.css";
 import { inferCanvasSize } from "../../board/DrawContext";
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
 import Board from "../../board/Board"
-import { Options } from '../../options/Options';
+import { GameOptions } from '../../options/GameOptions';
 
 const SPACEBAR = 32;
 const C_KEY = 67;
 const N_KEY = 78;
 
 interface BoardProps {
-    options: Options
+    options: GameOptions
 }
 
 export function boardPropsAreEqual(props1: BoardProps, props2: BoardProps) {
@@ -21,10 +21,10 @@ export function boardPropsAreEqual(props1: BoardProps, props2: BoardProps) {
 
 export default function RBoard(props: BoardProps) {
     let board: Board;
-    const options = props.options;
-    const colCount = options.colCount;
-    const rowCount = options.rowCount;
-    const mineCount = options.mineCount;
+    const diffOptions = props.options.difficultyOptions;
+    const colCount = diffOptions.colCount;
+    const rowCount = diffOptions.rowCount;
+    const mineCount = diffOptions.mineCount;
 
     const canvasRef = useRef(null);
 

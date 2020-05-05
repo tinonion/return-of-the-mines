@@ -1,0 +1,12 @@
+.sub-menu {
+    background-color: grey;
+    margin-right: 5px;
+    height: 90px;
+    padding: 10px;
+}
+
+.menu-title {
+    font-family: Helvetica;
+    font-size: 20px;
+    position: relative;
+}

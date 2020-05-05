@@ -4,19 +4,6 @@
     display: flex;
 }
 
-.options-section {
-    background-color: grey;
-    margin-right: 5px;
-    height: 90px;
-    padding: 10px;
-}
-
-.section-title {
-    font-family: Helvetica;
-    font-size: 20px;
-    position: relative;
-}
-
 .strip-button {
     margin-top: 10px;
 }

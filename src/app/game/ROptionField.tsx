@@ -7,11 +7,20 @@ interface OptionFieldProps {
     text: string;
     value: string;
     maxInputLength: number;
-    onChange: (e: ChangeEvent<HTMLInputElement>, maxInputLength: number) => void;
+    onChange: (newValue: string) => void
 }
 
 export default function ROptionField(props: OptionFieldProps) {
     const widthProp: CSSProperties = { width: props.maxInputLength * 8 };
+
+    function changeField(e: ChangeEvent<HTMLInputElement>) {
+        let newValue = e.currentTarget.value;
+        if (newValue.length > props.maxInputLength) {
+            newValue = newValue.substring(0, props.maxInputLength);
+        } 
+
+        props.onChange(newValue);
+    }
 
     return (
         <div className="option-field">
@@ -23,7 +32,7 @@ export default function ROptionField(props: OptionFieldProps) {
                     value={props.value}
                     type="text" 
                     disabled={!props.enableInput} 
-                    onChange={(e) => { props.onChange(e, props.maxInputLength); }}/>
+                    onChange={(e) => { changeField(e); }}/>
         </div>
     );
 }

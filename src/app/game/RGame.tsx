@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 
 import ROptionsBar from "./ROptionsBar";
-import RBoard, { boardPropsAreEqual } from "./RBoard";
-import { OptionFields, OptionPair, defaultOptionFields } from "../../options/OptionFields";
-import { Options, defaultOptions } from "../../options/Options";
-import { validateOptions } from "../../options/validation";
+import RBoard from "./RBoard";
+import { defaultOptions, GameOptions, ValidatedOptions } from "../../options/GameOptions";
 
 export default function RGame() {
     const [options, setOptions] = useState(defaultOptions());
 
-    function commitOptions(optionFields: OptionFields) {
-        console.log("committing options");
-        setOptions(validateOptions(optionFields));
+    function commitOptions(qualifier: keyof GameOptions, validated: ValidatedOptions) {
+        let newOptions = Object.assign({}, options);
+        newOptions[qualifier] = validated;
+        setOptions(newOptions);
+        console.log(options);
     }
 
     return (
