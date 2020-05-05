@@ -49,47 +49,55 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
     const title = "Difficulty";
 
     const children = new Array<JSX.Element>(
-        <ROptionToggle text="Beginner"
-                        selected={difficultySelections[0]}
-                        handleClick={() => 
+        <ROptionToggle key="beginner-button"
+                       text="Beginner"
+                       selected={difficultySelections[0]}
+                       handleClick={() => 
                             { changeDifficulty(Difficulty.Beginner); }}/>,
-        <ROptionToggle text="Intermediate"
-                        selected={difficultySelections[1]}
-                        handleClick={() => 
+        <ROptionToggle key="intermediate-button"
+                       text="Intermediate"
+                       selected={difficultySelections[1]}
+                       handleClick={() => 
                             { changeDifficulty(Difficulty.Intermediate); }}/>,
-        <ROptionToggle text="Expert"
-                        selected={difficultySelections[2]}
-                        handleClick={() => 
+        <ROptionToggle key="expert-button"
+                       text="Expert"
+                       selected={difficultySelections[2]}
+                       handleClick={() => 
                             { changeDifficulty(Difficulty.Expert); }}/>,
-        <ROptionToggle text="Custom"
-                        selected={difficultySelections[3]}
-                        handleClick={() => 
+        <ROptionToggle key="custom-button"
+                       text="Custom"
+                       selected={difficultySelections[3]}
+                       handleClick={() => 
                             { changeDifficulty(Difficulty.Custom); }}/>,
-        <br/>,
-        <div className="horizontal-space"/>,
-        <ROptionField enableInput={enableDifficultyInput}
-                        text="Width"
-                        maxInputLength={2}
-                        value={difficultyFields.colCount}
-                        onChange={(newValue: string) => {
+        <br key="break"/>,
+        <div key="horizontal-space" className="horizontal-space"/>,
+        <ROptionField key="width-field"
+                      enableInput={enableDifficultyInput}
+                      text="Width"
+                      maxInputLength={2}
+                      value={difficultyFields.colCount}
+                      onChange={(newValue: string) => {
                             changeOptionField("colCount", newValue);
                         }}/>,
-        <ROptionField enableInput={enableDifficultyInput}
-                        text="Height"
-                        maxInputLength={2}
-                        value={difficultyFields.rowCount}
-                        onChange={(newValue: string) => {
+        <ROptionField key="height-field"
+                      enableInput={enableDifficultyInput}
+                      text="Height"
+                      maxInputLength={2}
+                      value={difficultyFields.rowCount}
+                      onChange={(newValue: string) => {
                             changeOptionField("rowCount", newValue);
                         }}/>,                              
-        <ROptionField enableInput={enableDifficultyInput}
-                        text="Mines"
-                        maxInputLength={4}
-                        value={difficultyFields.mineCount}
-                        onChange={(newValue: string) => {
+        <ROptionField key="mine-field"
+                      enableInput={enableDifficultyInput}
+                      text="Mines"
+                      maxInputLength={4}
+                      value={difficultyFields.mineCount}
+                      onChange={(newValue: string) => {
                             changeOptionField("mineCount", newValue);
                         }}/>,
-        <ROptionButton text="*"
-                        onClick={(e) => { 
+        <ROptionButton key="reset-button"
+                       text="*"
+                       onClick={(e) => { 
                             const validated: diffOptions.ValidatedDifficultyOptions = 
                                 diffOptions.validateDifficultyOptions(difficultyFields);
                             props.commitOptions("difficultyOptions", validated); 

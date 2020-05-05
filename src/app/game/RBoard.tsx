@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 import "../css/Board.css";
 import { inferCanvasSize } from "../../board/DrawContext";
@@ -15,32 +15,21 @@ interface BoardProps {
 }
 
 export default function RBoard(props: BoardProps) {
-    let board: Board;
-    const diffOptions = props.options.difficultyOptions;
-    const colCount = diffOptions.colCount; const rowCount = diffOptions.rowCount;
-    const mineCount = diffOptions.mineCount;
-
+    const boardRef = useRef(null);
     const canvasRef = useRef(null);
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        board = new Board(colCount, rowCount, mineCount, canvasRef.current);
+        const diffOptions = props.options.difficultyOptions;
+        const colCount = diffOptions.colCount; 
+        const rowCount = diffOptions.rowCount;
+        const mineCount = diffOptions.mineCount;
+
+        boardRef.current = new Board(colCount, rowCount, mineCount, canvasRef.current);
 
         // for unmounting board
         return () => {};
     });
-
-    const createBoard = useCallback(tileCanvas => {
-        if (tileCanvas == null) { return; }
-
-        canvasRef.current = tileCanvas;
-        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
-
-        tileCanvas.oncontextmenu = function (e: any) {
-            // disable context menu on right click
-            e.preventDefault();
-        }
-    }, []);
 
     function refToCanvas(x: number, y: number) {
         // refs general client coords to canvas
@@ -55,6 +44,7 @@ export default function RBoard(props: BoardProps) {
     }
 
     function handleMouseDown(e: React.MouseEvent) {
+        const board = boardRef.current;
         const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);
         if (e.buttons === 1) {
             board.handleLeftClick(canvasX, canvasY);
@@ -65,6 +55,7 @@ export default function RBoard(props: BoardProps) {
     }
 
     function handleMouseDrag(e: React.MouseEvent) {
+        const board = boardRef.current;
         if (e.buttons === 1) {
             // mouse is pressed
             const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
@@ -73,6 +64,7 @@ export default function RBoard(props: BoardProps) {
     }
 
     function handleMouseUp(e: React.MouseEvent) {
+        const board = boardRef.current;
         if (e.button === 0) {
             // reveal currently selected tile
             const [canvasX, canvasY] = refToCanvas(e.clientX, e.clientY);        
@@ -80,7 +72,8 @@ export default function RBoard(props: BoardProps) {
         }
     }
 
-    function handleKeyDown(e: KeyboardEvent, clientX: number, clientY: number) {
+    const handleKeyDown = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
+        const board = boardRef.current;
         const [x, y] = refToCanvas(clientX, clientY);
         if (!isPointInCanvas(x, y)) { return; }
 
@@ -93,14 +86,31 @@ export default function RBoard(props: BoardProps) {
         } else if (e.keyCode === N_KEY) {
             board.handleNKeyDown();
         }
-    }
+    }, [boardRef]);
 
-    function handleKeyUp(e: KeyboardEvent, clientX: number, clientY: number) {
+    const handleKeyUp = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
+        const board = boardRef.current;
         if (e.keyCode === C_KEY) {
             board.hideQuickMenu();
         }
-    }
+    }, [boardRef]);
 
+    const createBoard = useCallback((tileCanvas: HTMLCanvasElement) => {
+        if (tileCanvas == null) { return; }
+
+        console.log("create board");
+
+        canvasRef.current = tileCanvas;
+        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
+
+        tileCanvas.oncontextmenu = function (e: any) {
+            // disable context menu on right click
+            e.preventDefault();
+        }
+    }, [handleKeyDown, handleKeyUp]);
+
+    const colCount = props.options.difficultyOptions.colCount; 
+    const rowCount = props.options.difficultyOptions.rowCount;
     const [width, height] = inferCanvasSize(colCount, rowCount);
     return (
         <canvas id="tileCanvas"

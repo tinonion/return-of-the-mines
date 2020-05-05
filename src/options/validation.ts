@@ -1,5 +1,3 @@
-import { GameOptions } from "./GameOptions";
-
 export function validateRange(input: string, min: number, max: number, defaultValue: number): number {
     const num = parseInt(input);
 

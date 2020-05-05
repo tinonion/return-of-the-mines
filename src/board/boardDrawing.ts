@@ -8,8 +8,6 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawContext: DrawContext) {
     const borderThickness = drawContext.borderThickness;
     const tileSize = drawContext.tileSize;
 
-    console.log("w/h", width, height);
-
     // all drawing coords are relative to canvas
     // fill solid rectangle
     let ctx = tileCanvas.getContext('2d');

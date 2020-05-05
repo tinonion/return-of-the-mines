@@ -11,7 +11,6 @@ export default function RGame() {
         let newOptions = Object.assign({}, options);
         newOptions[qualifier] = validated;
         setOptions(newOptions);
-        console.log(options);
     }
 
     return (

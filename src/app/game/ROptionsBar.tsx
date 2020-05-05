@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React from "react";
 
 import RDifficultyMenu from "./RDifficultyMenu";
 
