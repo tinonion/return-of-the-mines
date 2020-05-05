@@ -2,11 +2,13 @@ import { DrawContext } from "./DrawContext";
 
 const TILE_BORDER_THICKNESS = 2;
 
-function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
-    const width = drawingInfo.totalWidth;
-    const height = drawingInfo.totalHeight;
-    const borderThickness = drawingInfo.borderThickness;
-    const tileSize = drawingInfo.tileSize;
+function initialDraw(tileCanvas: HTMLCanvasElement, drawContext: DrawContext) {
+    const width = drawContext.totalWidth;
+    const height = drawContext.totalHeight;
+    const borderThickness = drawContext.borderThickness;
+    const tileSize = drawContext.tileSize;
+
+    console.log("w/h", width, height);
 
     // all drawing coords are relative to canvas
     // fill solid rectangle
@@ -19,17 +21,8 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
     ctx.lineWidth = borderThickness;
     const halfWidth = borderThickness / 2;
 
-    // header menu's border
-    const paddedHeader = drawingInfo.headerExtents.createPadded(halfWidth);
-    ctx.beginPath();
-    ctx.rect(paddedHeader.left,
-             paddedHeader.top,
-             paddedHeader.width,
-             paddedHeader.height);
-    ctx.stroke();
-
     // tile grid's border
-    const paddedTiles = drawingInfo.tileExtents.createPadded(halfWidth);
+    const paddedTiles = drawContext.tileExtents.createPadded(halfWidth);
     ctx.beginPath();
     ctx.rect(paddedTiles.left,
              paddedTiles.top,
@@ -38,8 +31,8 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawingInfo: DrawContext) {
     ctx.stroke();
 
     // draw tile grid
-    const tilesX = drawingInfo.tileExtents.left;
-    const tilesY = drawingInfo.tileExtents.top;
+    const tilesX = drawContext.tileExtents.left;
+    const tilesY = drawContext.tileExtents.top;
     ctx.lineWidth = TILE_BORDER_THICKNESS;
     for (let colX = tilesX; colX <= width; colX += tileSize) {
         ctx.moveTo(colX, tilesY);

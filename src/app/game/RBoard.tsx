@@ -14,23 +14,16 @@ interface BoardProps {
     options: GameOptions
 }
 
-export function boardPropsAreEqual(props1: BoardProps, props2: BoardProps) {
-    console.log("props compare", props1.options === props2.options);
-    return props1.options === props2.options;
-}
-
 export default function RBoard(props: BoardProps) {
     let board: Board;
     const diffOptions = props.options.difficultyOptions;
-    const colCount = diffOptions.colCount;
-    const rowCount = diffOptions.rowCount;
+    const colCount = diffOptions.colCount; const rowCount = diffOptions.rowCount;
     const mineCount = diffOptions.mineCount;
 
     const canvasRef = useRef(null);
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        console.log("mounting board");
         board = new Board(colCount, rowCount, mineCount, canvasRef.current);
 
         // for unmounting board

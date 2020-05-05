@@ -100,10 +100,6 @@ export default class Board {
         return this.drawContext.tileExtents.isInside(x, y);
     }
 
-    inHeader(x: number, y: number) {
-        return this.drawContext.headerExtents.isInside(x, y);
-    }
-
     loseGame() {
         this.tiles.revealMines();
         this.gameState = GameState.Lost;
@@ -130,11 +126,7 @@ export default class Board {
     }
 
     handleLeftClick(canvasX: number, canvasY: number) {
-        if (this.inHeader(canvasX, canvasY)) {
-            // handle clicking the header
-            this.reset();
-
-        } else if (this.inTiles(canvasX, canvasY) && !this.isBoardLocked()) {
+        if (this.inTiles(canvasX, canvasY) && !this.isBoardLocked()) {
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
             if (this.gameState === GameState.Idle) {
                 // first click of the game, generate mines
