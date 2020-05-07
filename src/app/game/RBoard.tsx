@@ -98,8 +98,6 @@ export default function RBoard(props: BoardProps) {
     const createBoard = useCallback((tileCanvas: HTMLCanvasElement) => {
         if (tileCanvas == null) { return; }
 
-        console.log("create board");
-
         canvasRef.current = tileCanvas;
         createLocalizedKeyListener(handleKeyDown, handleKeyUp);
 

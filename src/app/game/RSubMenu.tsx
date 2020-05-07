@@ -4,7 +4,7 @@ import "../css/SubMenu.css";
 
 interface SubMenuProps {
     title: string,
-    children: Array<JSX.Element>,
+    children: JSX.Element
 }
 
 export default function RSubMenu(props: SubMenuProps) {

@@ -14,7 +14,7 @@ interface DifficultyMenuProps {
 export default function RDifficultyMenu(props: DifficultyMenuProps) {
     const [difficultyFields, setDifficultyFields] = useState(diffOptions.defaultDifficultyOptions());
 
-    function changeOptionField(qualifer: keyof diffOptions.DifficultyOptions, newValue: string) {
+    function changeOptionField(qualifier: keyof diffOptions.DifficultyOptions, newValue: string) {
         let newOptions = Object.assign({}, difficultyFields);
         // @ts-ignore
         newOptions[qualifier] = newValue;
@@ -40,6 +40,17 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
         setDifficultyFields(newOptions);
     }
 
+    const changeRowCount = (newValue: string) => {
+        changeOptionField("rowCount", newValue);
+    }
+
+    const changeColCount = (newValue: string) => {
+        changeOptionField("colCount", newValue);
+    }
+
+    const changeMineCount = (newValue: string) => {
+        changeOptionField("mineCount", newValue);
+    }
 
     let difficultySelections = new Array<boolean>(false, false, false, false);
     difficultySelections[difficultyFields.difficulty] = true;
@@ -48,62 +59,47 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
 
     const title = "Difficulty";
 
-    const children = new Array<JSX.Element>(
-        <ROptionToggle key="beginner-button"
-                       text="Beginner"
+    const children = (
+    <React.Fragment>
+        <ROptionToggle text="Beginner"
                        selected={difficultySelections[0]}
                        handleClick={() => 
-                            { changeDifficulty(Difficulty.Beginner); }}/>,
-        <ROptionToggle key="intermediate-button"
-                       text="Intermediate"
+                            { changeDifficulty(Difficulty.Beginner); }}/>
+        <ROptionToggle text="Intermediate"
                        selected={difficultySelections[1]}
                        handleClick={() => 
-                            { changeDifficulty(Difficulty.Intermediate); }}/>,
-        <ROptionToggle key="expert-button"
-                       text="Expert"
+                            { changeDifficulty(Difficulty.Intermediate); }}/>
+        <ROptionToggle text="Expert"
                        selected={difficultySelections[2]}
                        handleClick={() => 
-                            { changeDifficulty(Difficulty.Expert); }}/>,
-        <ROptionToggle key="custom-button"
-                       text="Custom"
+                            { changeDifficulty(Difficulty.Expert); }}/>
+        <ROptionToggle text="Custom"
                        selected={difficultySelections[3]}
                        handleClick={() => 
-                            { changeDifficulty(Difficulty.Custom); }}/>,
-        <br key="break"/>,
-        <div key="horizontal-space" className="horizontal-space"/>,
-        <ROptionField key="width-field"
-                      enableInput={enableDifficultyInput}
+                            { changeDifficulty(Difficulty.Custom); }}/>
+        <br />
+        <div className="horizontal-space"/>
+        <ROptionField enableInput={enableDifficultyInput}
                       text="Width"
                       maxInputLength={2}
                       value={difficultyFields.colCount}
-                      onChange={(newValue: string) => {
-                            changeOptionField("colCount", newValue);
-                        }}/>,
-        <ROptionField key="height-field"
-                      enableInput={enableDifficultyInput}
+                      onChange={changeColCount}/>
+        <ROptionField enableInput={enableDifficultyInput}
                       text="Height"
                       maxInputLength={2}
                       value={difficultyFields.rowCount}
-                      onChange={(newValue: string) => {
-                            changeOptionField("rowCount", newValue);
-                        }}/>,                              
-        <ROptionField key="mine-field"
-                      enableInput={enableDifficultyInput}
+                      onChange={changeRowCount}/>
+        <ROptionField enableInput={enableDifficultyInput}
                       text="Mines"
                       maxInputLength={4}
                       value={difficultyFields.mineCount}
-                      onChange={(newValue: string) => {
-                            changeOptionField("mineCount", newValue);
-                        }}/>,
-        <ROptionButton key="reset-button"
-                       text="*"
+                      onChange={changeMineCount}/>
+        <ROptionButton text="*"
                        onClick={(e) => { 
-                            const validated: diffOptions.ValidatedDifficultyOptions = 
-                                diffOptions.validateDifficultyOptions(difficultyFields);
-                            props.commitOptions("difficultyOptions", validated); 
+                            props.commitOptions("difficultyOptions", 
+                                                diffOptions.validateDifficultyOptions(difficultyFields)); 
                         }}/>
-
-    );
+    </React.Fragment>);
 
     return (
        <RSubMenu title={title}
