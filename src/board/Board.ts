@@ -5,6 +5,7 @@ import * as boardDrawing from "./boardDrawing";
 import * as tileDrawing from "./tiles/tileDrawing";
 import Extents from "../util/Extents";
 import * as arrayUtil from "../util/arrayUtil";
+import ProgressInterface from "./ProgressInterface";
 
 enum GameState {
     Idle,
@@ -26,18 +27,22 @@ export default class Board {
     tiles: Tiles;
     selectedTile: Array<number> | null;
     save: BoardSave | null;
+    progressInterface: ProgressInterface; 
 
-    constructor(rowSize: number, colSize: number, mineCount: number, boardCanvas: HTMLCanvasElement) {
+    constructor(rowSize: number, colSize: number, mineCount: number, boardCanvas: HTMLCanvasElement,
+                progressInterface: ProgressInterface) {
         this.gameState = GameState.Idle;
         this.canvas = boardCanvas;
         this.drawContext = createDrawContext(rowSize, colSize);
         this.tiles = new Tiles(rowSize, colSize, mineCount, this);
+        this.progressInterface = progressInterface;
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
     }
 
     reset() {
         this.tiles.reset();
+        this.progressInterface.resetGame();
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
         this.gameState = GameState.Idle;
@@ -103,12 +108,21 @@ export default class Board {
     loseGame() {
         this.tiles.revealMines();
         this.gameState = GameState.Lost;
+        this.progressInterface.endGame();
     }
 
     winGame() {
         this.gameState = GameState.Won;
+        this.progressInterface.endGame();
 
         console.log("wow, you won!");
+    }
+
+    startGame(tileCol: number, tileRow: number) {
+        // first click of the game, generate mines
+        this.gameState = GameState.InProgress;
+        this.tiles.placeMines(tileCol, tileRow);
+        this.progressInterface.startGame();
     }
 
     showQuickMenu() {
@@ -125,14 +139,32 @@ export default class Board {
         this.restoreState();
     }
 
+    placeFlag(tileCol: number, tileRow: number) {
+        this.progressInterface.markMine();
+        this.tiles.changeTileState(tileCol, tileRow, TileState.Flag);
+    }
+
+    removeFlag(tileCol: number, tileRow: number) {
+        this.progressInterface.unmarkMine();
+        this.tiles.changeTileState(tileCol, tileRow, TileState.Unpressed);
+    }
+
+    toggleFlagPlacement(tileCol: number, tileRow: number) {
+        const tileState = this.tiles.getTileState(tileCol, tileRow);
+
+        if (tileState === TileState.Unpressed) {
+            this.placeFlag(tileCol, tileRow);
+
+        } else if (tileState === TileState.Flag) {
+            this.removeFlag(tileCol, tileRow);
+        }
+    }
+
     handleLeftClick(canvasX: number, canvasY: number) {
         if (this.inTiles(canvasX, canvasY) && !this.isBoardLocked()) {
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
             if (this.gameState === GameState.Idle) {
-                // first click of the game, generate mines
-                this.gameState = GameState.InProgress;
-
-                this.tiles.placeMines(tileCol, tileRow);
+                this.startGame(tileCol, tileRow);
             }
 
             // handle tile click
@@ -151,18 +183,8 @@ export default class Board {
         if (this.inTiles(canvasX, canvasY)) {
             // handle flag placement with right click
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
-            const tiles = this.tiles;
-            const clickState = tiles.getTileState(tileCol, tileRow);
 
-            if (clickState === TileState.Unpressed) {
-                // place flag
-                tiles.changeTileState(tileCol, tileRow, TileState.Flag);
-
-            } else if (clickState === TileState.Flag) {
-                // remove flag
-                tiles.changeTileState(tileCol, tileRow, TileState.Unpressed);
-            }
-
+            this.toggleFlagPlacement(tileCol, tileRow)
         }
     }
 
@@ -234,6 +256,7 @@ export default class Board {
             this.gameState === GameState.Won) { return; }
 
         const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
+        this.toggleFlagPlacement(tileCol, tileRow);
         this.tiles.spaceRevealTile(tileCol, tileRow)
     }
 

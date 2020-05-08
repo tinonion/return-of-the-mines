@@ -145,15 +145,7 @@ export default class Tiles {
     }
 
     spaceRevealTile(tileCol: number, tileRow: number) {
-        const tileState = this.getTileState(tileCol, tileRow);
-
-        if (tileState === TileState.Unpressed) {
-            this.changeTileState(tileCol, tileRow, TileState.Flag);
-
-        } else if (tileState === TileState.Flag) {
-            this.changeTileState(tileCol, tileRow, TileState.Unpressed);
-
-        } else if (this.canSpaceReveal(tileCol, tileRow)) {
+        if (this.canSpaceReveal(tileCol, tileRow)) {
             NEIGHBOR_MATRIX.forEach(direction => {
                 const [adjCol, adjRow] = [tileCol + direction[0], tileRow + direction[1]];
 

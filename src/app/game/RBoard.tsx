@@ -5,13 +5,15 @@ import { inferCanvasSize } from "../../board/DrawContext";
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
 import Board from "../../board/Board"
 import { GameOptions } from '../../options/GameOptions';
+import ProgressInterface from '../../board/ProgressInterface';
 
 const SPACEBAR = 32;
 const C_KEY = 67;
 const N_KEY = 78;
 
 interface BoardProps {
-    options: GameOptions
+    options: GameOptions,
+    progressInterface: React.MutableRefObject<ProgressInterface>
 }
 
 export default function RBoard(props: BoardProps) {
@@ -25,7 +27,7 @@ export default function RBoard(props: BoardProps) {
         const rowCount = diffOptions.rowCount;
         const mineCount = diffOptions.mineCount;
 
-        boardRef.current = new Board(colCount, rowCount, mineCount, canvasRef.current);
+        boardRef.current = new Board(colCount, rowCount, mineCount, canvasRef.current, props.progressInterface.current);
 
         // for unmounting board
         return () => {};

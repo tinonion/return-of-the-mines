@@ -16,6 +16,7 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
         // @ts-ignore
         newOptions[k] = v;
         setDisplayOptions(newOptions);
+        props.commitOptions("displayOptions", newOptions);
     }
 
     const [showMineCount, showTimer] 
