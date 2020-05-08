@@ -224,7 +224,7 @@ export default class Board {
         if (this.gameState === GameState.Lost ||
             this.gameState === GameState.Won) { return; }
 
-        this.tiles.revealTile(tileCol, tileRow);
+        this.tiles.clickTile(tileCol, tileRow);
         this.selectedTile = null;
     }
 

@@ -55,18 +55,22 @@ export default class Tiles {
         }
     }
 
-    cascadeRevelation(tileCol: number, tileRow: number) {
+    canReveal(tileCol: number, tileRow: number) {
         if (!Extents.inMatrix(this.tileStates, tileCol, tileRow)) {
             // point must be inside tile matrix
-            return;
+            return false;
         }
 
         if (this.getTileState(tileCol, tileRow) !== TileState.Unpressed &&
             this.getTileState(tileCol, tileRow) !== TileState.Pressed) {
-            // can only cascade reveal for unrevealed tiles
-            return;
+            // can only reveal for unrevealed tiles
+            return false;
         }
 
+        return true;
+    }
+
+    revealTile(tileCol: number, tileRow: number) {
         // revealing tile
         this.revealedTileCnt += 1;
 
@@ -79,43 +83,60 @@ export default class Tiles {
         const revealedState = evaluateTile(tileCol, tileRow, this.mineMask);
         this.changeTileState(tileCol, tileRow, revealedState);
 
-        if (revealedState === TileState.Zero) {
-            NEIGHBOR_MATRIX.forEach(direction => {
-                const adjPoint = [tileCol + direction[0], tileRow + direction[1]];
+        return revealedState;
+    }
 
-                if (Extents.inMatrix(this.tileStates, adjPoint[0], adjPoint[1])) {
-                    this.cascadeRevelation(adjPoint[0], adjPoint[1]);
+    uncoverBoard(tileCol: number, tileRow: number) {
+        const startRevealedState = this.revealTile(tileCol, tileRow);
+        const noMineTiles = new Array<[number, number]>();
+
+        if (startRevealedState === TileState.Zero) { 
+            noMineTiles.push([tileCol, tileRow]); 
+        } 
+
+        while (noMineTiles.length > 0) {
+            const [tileCol, tileRow] = noMineTiles[0];
+            noMineTiles.shift();
+
+            NEIGHBOR_MATRIX.forEach(direction => {
+                const [adjCol, adjRow] = [tileCol + direction[0], tileRow + direction[1]];
+
+                if (this.canReveal(adjCol, adjRow)) {
+                    const newRevealedState = this.revealTile(adjCol, adjRow);
+
+                    if (newRevealedState === TileState.Zero) {
+                        noMineTiles.push([adjCol, adjRow]);
+                    }
                 }
             });
         }
     }
 
-    revealTile(tileCol: number, tileRow: number) {
-        const tileState = this.getTileState(tileCol, tileRow);
-        if (tileState !== TileState.Unpressed && tileState !== TileState.Pressed) {
-            return;
-
-        } else if (this.isMine(tileCol, tileRow)) {
+    clickTile(tileCol: number, tileRow: number) {
+        if (this.isMine(tileCol, tileRow)) {
             this.changeTileState(tileCol, tileRow, TileState.ExplodedMine); 
             this.board.loseGame();
 
         } else {
-            this.cascadeRevelation(tileCol, tileRow);
+            this.uncoverBoard(tileCol, tileRow);
         }
     }
 
-    canSpaceReveal(tileCol: number, tileRow: number, tileState: TileState) {
+    hasFlag(tileCol: number, tileRow: number) {
+        return Extents.inMatrix(this.tileStates, tileCol, tileRow) &&
+               this.getTileState(tileCol, tileRow) === TileState.Flag; 
+    }
+
+    canSpaceReveal(tileCol: number, tileRow: number) {
+        const tileState = this.getTileState(tileCol, tileRow);
+
         if (tileState < TileState.One || tileState > TileState.Eight) { return; }
 
         let neededFlags = tileState - TileState.Zero;
         NEIGHBOR_MATRIX.forEach(direction => {
-            const adjPoint = [tileCol + direction[0], tileRow + direction[1]];
+            const [adjCol, adjRow] = [tileCol + direction[0], tileRow + direction[1]];
 
-            if (!Extents.inMatrix(this.tileStates, adjPoint[0], adjPoint[1])) {
-                return;
-            }
-
-            if (this.getTileState(adjPoint[0], adjPoint[1]) === TileState.Flag) {
+            if (this.hasFlag(adjCol, adjRow)) {
                 neededFlags -= 1;
             }
         });
@@ -132,12 +153,12 @@ export default class Tiles {
         } else if (tileState === TileState.Flag) {
             this.changeTileState(tileCol, tileRow, TileState.Unpressed);
 
-        } else if (this.canSpaceReveal(tileCol, tileRow, tileState)) {
+        } else if (this.canSpaceReveal(tileCol, tileRow)) {
             NEIGHBOR_MATRIX.forEach(direction => {
                 const [adjCol, adjRow] = [tileCol + direction[0], tileRow + direction[1]];
 
-                if (Extents.inMatrix(this.tileStates, adjCol, adjRow)) {
-                    this.revealTile(adjCol, adjRow);
+                if (this.canReveal(adjCol, adjRow)) {
+                    this.clickTile(adjCol, adjRow);
                 }
             });
         } 

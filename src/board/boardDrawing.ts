@@ -35,14 +35,14 @@ function initialDraw(tileCanvas: HTMLCanvasElement, drawContext: DrawContext) {
     for (let colX = tilesX; colX <= width; colX += tileSize) {
         ctx.moveTo(colX, tilesY);
         ctx.lineTo(colX, height);
-        ctx.stroke();
     }
+    ctx.stroke();
 
     for (let rowY = tilesY; rowY <= height; rowY += tileSize) {
         ctx.moveTo(0, rowY);
         ctx.lineTo(width, rowY);
-        ctx.stroke();
     }
+    ctx.stroke();
 
     ctx.restore();
 }
