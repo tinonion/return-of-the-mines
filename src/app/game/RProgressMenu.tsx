@@ -1,6 +1,7 @@
 import React from "react";
 import RMineCounter from "./RMineCounter";
 import ProgressInterface, { defaultProgressInterface } from "../../board/ProgressInterface";
+import RTimer from "./RTimer";
 
 interface ProgressMenuProps {
     collectProgressInterface: (i: ProgressInterface) => void,
@@ -14,7 +15,7 @@ export default function RProgressMenu(props: ProgressMenuProps) {
 
     const mineCounter = props.hasMineCounter ? <RMineCounter initialCount={props.initialCount}
                                                              interface={progressInterface}/> : <div/>
-    const timer = <div/>;
+    const timer = props.hasTimer ? <RTimer interface={progressInterface}/> : <div/>;
 
     props.collectProgressInterface(progressInterface);
 
