@@ -1,7 +1,7 @@
 import Extents from "../util/Extents";
 
-const TILE_SIZE = 23;
-const BORDER_THICKNESS = 8;
+const DEFAULT_TILE_SIZE = 23;
+const DEFAULT_BORDER_THICKNESS = 8;
 
 export interface DrawContext {
     tileSize: number;
@@ -11,23 +11,33 @@ export interface DrawContext {
     tileExtents: Extents;
 }
 
-export function createDrawContext(rowSize: number, colSize: number): DrawContext {
-    const width = (rowSize * TILE_SIZE) + (BORDER_THICKNESS * 2);
-    const height = (colSize * TILE_SIZE) + (BORDER_THICKNESS * 2);
+function getScaled(target: number, scaleFactor: string) {
+    return (parseInt(scaleFactor) / 100) * target;
+}
+
+export function createDrawContext(colCount: number, rowCount: number, scaleFactor: string): DrawContext {
+    const tileSize = getScaled(DEFAULT_TILE_SIZE, scaleFactor);
+    const borderThickness = getScaled(DEFAULT_BORDER_THICKNESS, scaleFactor);
+
+    const height = (rowCount * tileSize) + (borderThickness * 2);
+    const width = (colCount * tileSize) + (borderThickness * 2);
     return {
-        tileSize: TILE_SIZE,
-        borderThickness: BORDER_THICKNESS,
+        tileSize: tileSize,
+        borderThickness: borderThickness,
         totalWidth: width,
         totalHeight: height,
-        tileExtents: new Extents(BORDER_THICKNESS,
-                                 BORDER_THICKNESS,
-                                 rowSize * TILE_SIZE,
-                                 colSize * TILE_SIZE)
+        tileExtents: new Extents(borderThickness,
+                                 borderThickness,
+                                 colCount * tileSize,
+                                 rowCount * tileSize)
     }
 }
 
-export function inferCanvasSize(rowSize: number, colSize: number) {
-    const width = (rowSize * TILE_SIZE) + (BORDER_THICKNESS * 2);
-    const height = (colSize * TILE_SIZE) + (BORDER_THICKNESS * 2);
+export function inferCanvasSize(colCount: number, rowCount: number, scaleFactor: string) {
+    const tileSize = getScaled(DEFAULT_TILE_SIZE, scaleFactor);
+    const borderThickness = getScaled(DEFAULT_BORDER_THICKNESS, scaleFactor);
+
+    const width = (colCount * tileSize) + (borderThickness * 2);
+    const height = (rowCount * tileSize) + (borderThickness * 2);
     return [width, height];
 }

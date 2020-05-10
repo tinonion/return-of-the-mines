@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState } from "react";
 import React from "react";
 
 import ProgressInterface from "../../board/ProgressInterface";
@@ -13,7 +13,6 @@ export default function RTimer(props: TimerProps) {
     const [currentInterval, setCurrentInterval] = useState(null);
 
     function timer() {
-        console.log("tick");
         setTime(time => time + 1);
     }
 

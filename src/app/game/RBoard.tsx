@@ -22,12 +22,7 @@ export default function RBoard(props: BoardProps) {
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        const diffOptions = props.options.difficultyOptions;
-        const colCount = diffOptions.colCount; 
-        const rowCount = diffOptions.rowCount;
-        const mineCount = diffOptions.mineCount;
-
-        boardRef.current = new Board(colCount, rowCount, mineCount, canvasRef.current, props.progressInterface.current);
+        boardRef.current = new Board(props.options, canvasRef.current, props.progressInterface.current);
 
         // for unmounting board
         return () => {};
@@ -111,7 +106,9 @@ export default function RBoard(props: BoardProps) {
 
     const colCount = props.options.difficultyOptions.colCount; 
     const rowCount = props.options.difficultyOptions.rowCount;
-    const [width, height] = inferCanvasSize(colCount, rowCount);
+    const [width, height] = inferCanvasSize(colCount, 
+                                            rowCount, 
+                                            props.options.displayOptions.scaleFactor);
     return (
         <canvas id="tileCanvas"
                 className="board"

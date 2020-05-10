@@ -6,6 +6,7 @@ import * as tileDrawing from "./tiles/tileDrawing";
 import Extents from "../util/Extents";
 import * as arrayUtil from "../util/arrayUtil";
 import ProgressInterface from "./ProgressInterface";
+import { GameOptions } from "../options/GameOptions";
 
 enum GameState {
     Idle,
@@ -29,14 +30,23 @@ export default class Board {
     save: BoardSave | null;
     progressInterface: ProgressInterface; 
 
-    constructor(rowSize: number, colSize: number, mineCount: number, boardCanvas: HTMLCanvasElement,
-                progressInterface: ProgressInterface) {
-        this.gameState = GameState.Idle;
+    constructor(options: GameOptions, boardCanvas: HTMLCanvasElement, progressInterface: ProgressInterface) {
+        const diffOptions = options.difficultyOptions;
+        const displayOptions = options.displayOptions;
+
         this.canvas = boardCanvas;
-        this.drawContext = createDrawContext(rowSize, colSize);
-        this.tiles = new Tiles(rowSize, colSize, mineCount, this);
         this.progressInterface = progressInterface;
 
+        this.drawContext = createDrawContext(diffOptions.colCount, 
+                                             diffOptions.rowCount,
+                                             displayOptions.scaleFactor);
+        this.tiles = new Tiles(diffOptions.colCount, 
+                               diffOptions.rowCount, 
+                               diffOptions.mineCount, 
+                               this);
+
+        this.gameState = GameState.Idle;
+        this.progressInterface.resetGame();
         boardDrawing.initialDraw(this.canvas, this.drawContext);
     }
 

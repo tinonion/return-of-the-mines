@@ -3,6 +3,7 @@ import RSubMenu from "./RSubMenu";
 import { ValidatedOptions, GameOptions } from "../../options/GameOptions";
 import ROptionToggle from "./ROptionToggle";
 import { defaultDisplayOptions, DisplayOptions } from "../../options/DisplayOptions";
+import RZoomSlider from "./RZoomSlider";
 
 interface DisplayMenuProps {
     commitOptions: (o: keyof GameOptions, v: ValidatedOptions) => void
@@ -23,15 +24,19 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
         = [displayOptions.showMineCount, displayOptions.showTimer];
 
     const children = (<React.Fragment>
-       <ROptionToggle text="Mines"
-                      selected={showMineCount}
-                      handleClick={() => 
-                        { changeDisplayOption("showMineCount", !showMineCount) }}/>
-       <br/>
-       <ROptionToggle text="Timer"
-                      selected={showTimer}
-                      handleClick={() => 
-                        { changeDisplayOption("showTimer", !showTimer); }}/>
+        <span style={{display: "inline-block"}}>
+            <ROptionToggle text="Mines"
+                            selected={showMineCount}
+                            handleClick={() => 
+                            { changeDisplayOption("showMineCount", !showMineCount) }}/>
+            <br/>
+            <ROptionToggle text="Timer"
+                            selected={showTimer}
+                            handleClick={() => 
+                            { changeDisplayOption("showTimer", !showTimer); }}/>
+        </span>
+        <RZoomSlider onMouseUp={v => changeDisplayOption("scaleFactor", v)}
+                        value={displayOptions.scaleFactor}/>
     </React.Fragment>);
 
     return (
