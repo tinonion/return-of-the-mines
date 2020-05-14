@@ -1,6 +1,5 @@
 import React from "react";
-
-import "../css/SubMenu.css";
+import buildStyle, { Display, Font, Color } from "../css/StyleBuilder";
 
 interface SubMenuProps {
     title: string,
@@ -8,9 +7,16 @@ interface SubMenuProps {
 }
 
 export default function RSubMenu(props: SubMenuProps) {
+    let parentStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.InlineBlock);
+    parentStyle.marginRight = "5px";
+    parentStyle.height = "90px";
+    parentStyle.padding = "10px";
+
+    let titleStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.Block);
+
     return (
-        <span className="sub-menu">
-            <div className="menu-title">
+        <span style={parentStyle}>
+            <div style={titleStyle}>
                 {props.title}
             </div>
             {props.children}

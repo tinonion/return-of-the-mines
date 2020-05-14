@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import "../css/MineCounter.css";
 import ProgressInterface from "../../board/ProgressInterface";
+import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 
 interface MineCounterProps {
     interface: ProgressInterface,
@@ -26,8 +26,12 @@ export default function RMineCounter(props: MineCounterProps) {
     props.interface.markMine = markMine;
     props.interface.unmarkMine = unmarkMine;
 
+    let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
+    style.marginLeft = "10px";
+    style.padding = "10px";
+
     return (
-        <span className="mine-counter">
+        <span style={style}>
             {mineCount}
         </span>
     );

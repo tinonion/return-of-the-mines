@@ -1,6 +1,6 @@
 import React, { MouseEvent } from "react";
 
-import "../css/OptionButton.css";
+import buildStyle, { Display, Font, Color } from "../css/StyleBuilder";
 
 interface OptionButtonProps {
     onClick: (e: MouseEvent) => void,
@@ -8,9 +8,12 @@ interface OptionButtonProps {
 }
 
 export default function ROptionButton(props: OptionButtonProps) {
+    let style = buildStyle(Font.Item, Color.Unselected, Display.Inline);
+    style.border = "none";
+    style.marginLeft = "10px";
 
     return (
-        <button className="option-button"
+        <button style={style}
                 onClick={props.onClick}>
             {props.text}
         </button>

@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, CSSProperties } from 'react';
 
-import "../css/Board.css";
 import { inferCanvasSize } from "../../board/DrawContext";
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
 import Board from "../../board/Board"
@@ -27,6 +26,42 @@ export default function RBoard(props: BoardProps) {
         // for unmounting board
         return () => {};
     });
+
+    const handleKeyDown = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
+        const board = boardRef.current;
+        const [x, y] = refToCanvas(clientX, clientY);
+        if (!isPointInCanvas(x, y)) { return; }
+
+        if (e.keyCode === SPACEBAR) {
+            board.handleSpaceDown(x, y);
+
+        } else if (e.keyCode === C_KEY) {
+            board.showQuickMenu();
+
+        } else if (e.keyCode === N_KEY) {
+            board.handleNKeyDown();
+        }
+    }, [boardRef]);
+
+    const handleKeyUp = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
+        const board = boardRef.current;
+        if (e.keyCode === C_KEY) {
+            board.hideQuickMenu();
+        }
+    }, [boardRef]);
+
+    const createBoard = useCallback((tileCanvas: HTMLCanvasElement) => {
+        if (tileCanvas == null) { return; }
+
+        canvasRef.current = tileCanvas;
+        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
+
+        tileCanvas.oncontextmenu = function (e: any) {
+            // disable context menu on right click
+            e.preventDefault();
+        }
+    }, [handleKeyDown, handleKeyUp]);
+
 
     function refToCanvas(x: number, y: number) {
         // refs general client coords to canvas
@@ -69,49 +104,15 @@ export default function RBoard(props: BoardProps) {
         }
     }
 
-    const handleKeyDown = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
-        const board = boardRef.current;
-        const [x, y] = refToCanvas(clientX, clientY);
-        if (!isPointInCanvas(x, y)) { return; }
-
-        if (e.keyCode === SPACEBAR) {
-            board.handleSpaceDown(x, y);
-
-        } else if (e.keyCode === C_KEY) {
-            board.showQuickMenu();
-
-        } else if (e.keyCode === N_KEY) {
-            board.handleNKeyDown();
-        }
-    }, [boardRef]);
-
-    const handleKeyUp = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
-        const board = boardRef.current;
-        if (e.keyCode === C_KEY) {
-            board.hideQuickMenu();
-        }
-    }, [boardRef]);
-
-    const createBoard = useCallback((tileCanvas: HTMLCanvasElement) => {
-        if (tileCanvas == null) { return; }
-
-        canvasRef.current = tileCanvas;
-        createLocalizedKeyListener(handleKeyDown, handleKeyUp);
-
-        tileCanvas.oncontextmenu = function (e: any) {
-            // disable context menu on right click
-            e.preventDefault();
-        }
-    }, [handleKeyDown, handleKeyUp]);
-
     const colCount = props.options.difficultyOptions.colCount; 
     const rowCount = props.options.difficultyOptions.rowCount;
     const [width, height] = inferCanvasSize(colCount, 
                                             rowCount, 
                                             props.options.displayOptions.scaleFactor);
+
+    let style = { "margin": "5px 5px 5px 10px"} as CSSProperties;
     return (
-        <canvas id="tileCanvas"
-                className="board"
+        <canvas style={style} 
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseDrag}
                 onMouseUp={handleMouseUp}

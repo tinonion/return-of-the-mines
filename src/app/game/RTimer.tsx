@@ -2,7 +2,7 @@ import { useState } from "react";
 import React from "react";
 
 import ProgressInterface from "../../board/ProgressInterface";
-import "../css/Timer.css";
+import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 
 interface TimerProps {
     interface: ProgressInterface
@@ -35,8 +35,12 @@ export default function RTimer(props: TimerProps) {
     progressInterface.endGame = stop;
     progressInterface.resetGame = reset;
 
+    let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
+    style.marginLeft = "10px";
+    style.padding = "10px";
+
     return (
-        <div className="timer">
+        <div style={style}>
             {time}
         </div>
     );
