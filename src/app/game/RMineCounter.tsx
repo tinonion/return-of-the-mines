@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from "react";
 
-import ProgressInterface from "../../board/ProgressInterface";
 import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 
+export interface MineCounterController {
+    reset: () => void,
+    markMine: () => void,
+    unmarkMine: () => void
+}
+
+export function createMineCounterController() {
+    return {
+        reset: () => {},
+        markMine: () => {},
+        unmarkMine: () => {}
+    } as MineCounterController;
+}
+
 interface MineCounterProps {
-    interface: ProgressInterface,
-    initialCount: number
+    initialCount: number,
+    controller: MineCounterController
 }
 
 export default function RMineCounter(props: MineCounterProps) {
@@ -15,6 +28,10 @@ export default function RMineCounter(props: MineCounterProps) {
         setMineCount(props.initialCount);
     }, [props.initialCount]);
 
+    function reset() {
+        setMineCount(props.initialCount);
+    }
+
     function markMine() {
         setMineCount(mineCount - 1);
     }
@@ -23,8 +40,9 @@ export default function RMineCounter(props: MineCounterProps) {
         setMineCount(mineCount + 1);
     }
 
-    props.interface.markMine = markMine;
-    props.interface.unmarkMine = unmarkMine;
+    props.controller.reset = reset;
+    props.controller.markMine = markMine;
+    props.controller.unmarkMine = unmarkMine;
 
     let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
     style.marginLeft = "10px";

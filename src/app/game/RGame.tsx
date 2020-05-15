@@ -3,8 +3,10 @@ import React, { useState, useRef } from "react";
 import ROptionsBar from "./ROptionsBar";
 import RBoard from "./RBoard";
 import { defaultOptions, GameOptions } from "../../options/GameOptions";
-import RProgressMenu from "./RProgressMenu";
-import ProgressInterface from "../../board/ProgressInterface";
+import { inferCanvasSize } from "../../board/DrawContext";
+import RBoardHeader from "./RBoardHeader";
+import RMineCounter, { createMineCounterController } from "./RMineCounter";
+import RTimer, { createTimerController } from "./RTimer";
 
 export default function RGame() {
     const [options, setOptions] = useState(defaultOptions());
@@ -17,19 +19,29 @@ export default function RGame() {
         setOptions(newOptions);
     }
 
-    const progressMenu = <RProgressMenu collectProgressInterface={(i: ProgressInterface) => 
-                                            { progressInterface.current = i;}}
-                                        initialCount={options.difficultyOptions.mineCount}
-                                        hasMineCounter={options.displayOptions.showMineCount}
-                                        hasTimer={options.displayOptions.showTimer}/>
+    const mineCounterController = createMineCounterController();
+    const mineCounter = <RMineCounter initialCount={options.difficultyOptions.mineCount}
+                                      controller={mineCounterController}/>
+
+    const timerController = createTimerController();
+    const timer = <RTimer controller={timerController}/> 
+
+    const [gameWidth, gameHeight] = inferCanvasSize(options.difficultyOptions.colCount, 
+                                                    options.difficultyOptions.rowCount, 
+                                                    options.displayOptions.scaleFactor);
 
     return (
         <div>
             <ROptionsBar commitOptions={commitOptions}/>
-            {progressMenu}
+            <RBoardHeader width={gameWidth}
+                          mineCounter={mineCounter}
+                          timer={timer}/>
             <br/>
             <RBoard options={options}
-                    progressInterface={progressInterface}/>
+                    width={gameWidth}
+                    height={gameHeight}
+                    mineCounterController={mineCounterController}
+                    timerController={timerController}/>
         </div>
     );
 }

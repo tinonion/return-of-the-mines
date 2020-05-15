@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useCallback, CSSProperties } from 'react';
 
-import { inferCanvasSize } from "../../board/DrawContext";
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
 import Board from "../../board/Board"
 import { GameOptions } from '../../options/GameOptions';
-import ProgressInterface from '../../board/ProgressInterface';
+import { TimerController } from './RTimer';
+import { MineCounterController } from './RMineCounter';
+
 
 const SPACEBAR = 32;
 const C_KEY = 67;
@@ -12,7 +13,10 @@ const N_KEY = 78;
 
 interface BoardProps {
     options: GameOptions,
-    progressInterface: React.MutableRefObject<ProgressInterface>
+    width: number,
+    height: number,
+    mineCounterController: MineCounterController,
+    timerController: TimerController
 }
 
 export default function RBoard(props: BoardProps) {
@@ -21,7 +25,10 @@ export default function RBoard(props: BoardProps) {
 
     // used for mounting component and initing keyboard event listener
     useEffect(() => { 
-        boardRef.current = new Board(props.options, canvasRef.current, props.progressInterface.current);
+        boardRef.current = new Board(props.options, 
+                                     canvasRef.current, 
+                                     props.mineCounterController,
+                                     props.timerController);
 
         // for unmounting board
         return () => {};
@@ -104,12 +111,6 @@ export default function RBoard(props: BoardProps) {
         }
     }
 
-    const colCount = props.options.difficultyOptions.colCount; 
-    const rowCount = props.options.difficultyOptions.rowCount;
-    const [width, height] = inferCanvasSize(colCount, 
-                                            rowCount, 
-                                            props.options.displayOptions.scaleFactor);
-
     let style = { "margin": "5px 5px 5px 10px"} as CSSProperties;
     return (
         <canvas style={style} 
@@ -117,7 +118,7 @@ export default function RBoard(props: BoardProps) {
                 onMouseMove={handleMouseDrag}
                 onMouseUp={handleMouseUp}
                 ref={createBoard}
-                width={width}
-                height={height} />
+                width={props.width}
+                height={props.height} />
     );
 }

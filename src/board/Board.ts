@@ -5,8 +5,9 @@ import * as boardDrawing from "./boardDrawing";
 import * as tileDrawing from "./tiles/tileDrawing";
 import Extents from "../util/Extents";
 import * as arrayUtil from "../util/arrayUtil";
-import ProgressInterface from "./ProgressInterface";
 import { GameOptions } from "../options/GameOptions";
+import { MineCounterController } from "../app/game/RMineCounter";
+import { TimerController } from "../app/game/RTimer";
 
 enum GameState {
     Idle,
@@ -28,14 +29,16 @@ export default class Board {
     tiles: Tiles;
     selectedTile: Array<number> | null;
     save: BoardSave | null;
-    progressInterface: ProgressInterface; 
+    mineCounterController: MineCounterController;
+    timerController: TimerController;
 
-    constructor(options: GameOptions, boardCanvas: HTMLCanvasElement, progressInterface: ProgressInterface) {
+    constructor(options: GameOptions, boardCanvas: HTMLCanvasElement, mineCounterController: MineCounterController, timerController: TimerController) {
         const diffOptions = options.difficultyOptions;
         const displayOptions = options.displayOptions;
 
         this.canvas = boardCanvas;
-        this.progressInterface = progressInterface;
+        this.mineCounterController = mineCounterController;
+        this.timerController = timerController;
 
         this.drawContext = createDrawContext(diffOptions.colCount, 
                                              diffOptions.rowCount,
@@ -45,14 +48,13 @@ export default class Board {
                                diffOptions.mineCount, 
                                this);
 
-        this.gameState = GameState.Idle;
-        this.progressInterface.resetGame();
-        boardDrawing.initialDraw(this.canvas, this.drawContext);
+        this.reset();
     }
 
     reset() {
         this.tiles.reset();
-        this.progressInterface.resetGame();
+        this.mineCounterController.reset();
+        this.timerController.reset();
 
         boardDrawing.initialDraw(this.canvas, this.drawContext);
         this.gameState = GameState.Idle;
@@ -118,12 +120,12 @@ export default class Board {
     loseGame() {
         this.tiles.revealMines();
         this.gameState = GameState.Lost;
-        this.progressInterface.endGame();
+        this.timerController.stop();
     }
 
     winGame() {
         this.gameState = GameState.Won;
-        this.progressInterface.endGame();
+        this.timerController.stop();
 
         console.log("wow, you won!");
     }
@@ -132,7 +134,7 @@ export default class Board {
         // first click of the game, generate mines
         this.gameState = GameState.InProgress;
         this.tiles.placeMines(tileCol, tileRow);
-        this.progressInterface.startGame();
+        this.timerController.start();
     }
 
     showQuickMenu() {
@@ -150,12 +152,12 @@ export default class Board {
     }
 
     placeFlag(tileCol: number, tileRow: number) {
-        this.progressInterface.markMine();
+        this.mineCounterController.markMine();
         this.tiles.changeTileState(tileCol, tileRow, TileState.Flag);
     }
 
     removeFlag(tileCol: number, tileRow: number) {
-        this.progressInterface.unmarkMine();
+        this.mineCounterController.unmarkMine();
         this.tiles.changeTileState(tileCol, tileRow, TileState.Unpressed);
     }
 

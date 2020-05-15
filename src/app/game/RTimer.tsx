@@ -1,11 +1,24 @@
 import { useState } from "react";
 import React from "react";
 
-import ProgressInterface from "../../board/ProgressInterface";
 import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 
+export interface TimerController {
+    start: () => void,
+    stop: () => void,
+    reset: () => void
+}
+
+export function createTimerController() {
+    return {
+        start: () => {},
+        stop: () => {},
+        reset: () => {},
+    } as TimerController;
+}
+
 interface TimerProps {
-    interface: ProgressInterface
+    controller: TimerController
 }
 
 export default function RTimer(props: TimerProps) {
@@ -30,10 +43,10 @@ export default function RTimer(props: TimerProps) {
         setTime(0);
     }
 
-    let progressInterface = props.interface;
-    progressInterface.startGame = start;
-    progressInterface.endGame = stop;
-    progressInterface.resetGame = reset;
+    let controller = props.controller;
+    controller.start = start;
+    controller.stop = stop;
+    controller.reset = reset;
 
     let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
     style.marginLeft = "10px";
