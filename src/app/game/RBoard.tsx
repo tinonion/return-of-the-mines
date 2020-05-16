@@ -111,10 +111,8 @@ export default function RBoard(props: BoardProps) {
         }
     }
 
-    let style = { "margin": "5px 5px 5px 10px"} as CSSProperties;
     return (
-        <canvas style={style} 
-                onMouseDown={handleMouseDown}
+        <canvas onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseDrag}
                 onMouseUp={handleMouseUp}
                 ref={createBoard}

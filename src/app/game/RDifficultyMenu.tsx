@@ -14,6 +14,22 @@ interface DifficultyMenuProps {
 export default function RDifficultyMenu(props: DifficultyMenuProps) {
     const [difficultyFields, setDifficultyFields] = useState(diffOptions.defaultDifficultyOptions());
 
+    function onCommit(e: any) {
+        const validated = diffOptions.validateDifficultyOptions(difficultyFields); 
+
+        props.commitOptions("difficultyOptions", validated);
+        
+        // change fields to reflect changes from validation
+        const validatedFields = {
+            difficulty: validated.difficulty,
+            colCount: validated.colCount.toString(),
+            rowCount: validated.rowCount.toString(),
+            mineCount: validated.mineCount.toString(),
+        } as diffOptions.DifficultyOptions;
+
+        setDifficultyFields(validatedFields);
+    }
+
     function changeOptionField(qualifier: keyof diffOptions.DifficultyOptions, newValue: string) {
         let newOptions = Object.assign({}, difficultyFields);
         // @ts-ignore
@@ -57,52 +73,59 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
 
     const enableDifficultyInput = difficultyFields.difficulty === Difficulty.Custom;
 
-    const title = "Difficulty";
+    const inlineButtons = true;
 
     const children = (
     <React.Fragment>
-        <ROptionToggle text="Beginner"
-                       selected={difficultySelections[0]}
-                       handleClick={() => 
-                            { changeDifficulty(Difficulty.Beginner); }}/>
-        <ROptionToggle text="Intermediate"
-                       selected={difficultySelections[1]}
-                       handleClick={() => 
-                            { changeDifficulty(Difficulty.Intermediate); }}/>
-        <ROptionToggle text="Expert"
-                       selected={difficultySelections[2]}
-                       handleClick={() => 
-                            { changeDifficulty(Difficulty.Expert); }}/>
-        <ROptionToggle text="Custom"
-                       selected={difficultySelections[3]}
-                       handleClick={() => 
-                            { changeDifficulty(Difficulty.Custom); }}/>
-        <br />
-        <div className="horizontal-space"/>
-        <ROptionField enableInput={enableDifficultyInput}
-                      text="Width"
-                      maxInputLength={2}
-                      value={difficultyFields.colCount}
-                      onChange={changeColCount}/>
-        <ROptionField enableInput={enableDifficultyInput}
-                      text="Height"
-                      maxInputLength={2}
-                      value={difficultyFields.rowCount}
-                      onChange={changeRowCount}/>
-        <ROptionField enableInput={enableDifficultyInput}
-                      text="Mines"
-                      maxInputLength={4}
-                      value={difficultyFields.mineCount}
-                      onChange={changeMineCount}/>
-        <ROptionButton text="*"
-                       onClick={(e) => { 
-                            props.commitOptions("difficultyOptions", 
-                                                diffOptions.validateDifficultyOptions(difficultyFields)); 
-                        }}/>
+
+        <div>
+            <ROptionToggle inline={inlineButtons}
+                        text="Beginner"
+                        selected={difficultySelections[0]}
+                        handleClick={() => 
+                                { changeDifficulty(Difficulty.Beginner); }}/>
+            <ROptionToggle inline={inlineButtons}
+                        text="Intermediate"
+                        selected={difficultySelections[1]}
+                        handleClick={() => 
+                                { changeDifficulty(Difficulty.Intermediate); }}/>
+            <ROptionToggle inline={inlineButtons}
+                        text="Expert"
+                        selected={difficultySelections[2]}
+                        handleClick={() => 
+                                { changeDifficulty(Difficulty.Expert); }}/>
+            <ROptionToggle inline={inlineButtons}
+                        text="Custom"
+                        selected={difficultySelections[3]}
+                        handleClick={() => 
+                                { changeDifficulty(Difficulty.Custom); }}/>
+        </div>
+
+        <div style={{
+            }}>
+            <ROptionField enableInput={enableDifficultyInput}
+                        text="Width"
+                        maxInputLength={2}
+                        value={difficultyFields.colCount}
+                        onChange={changeColCount}/>
+            <ROptionField enableInput={enableDifficultyInput}
+                        text="Height"
+                        maxInputLength={2}
+                        value={difficultyFields.rowCount}
+                        onChange={changeRowCount}/>
+            <ROptionField enableInput={enableDifficultyInput}
+                        text="Mines"
+                        maxInputLength={4}
+                        value={difficultyFields.mineCount}
+                        onChange={changeMineCount}/>
+            <span style={{marginLeft: "5px"}}/>
+            <ROptionButton text="*" onClick={onCommit}/>
+        </div>
+
     </React.Fragment>);
 
     return (
-       <RSubMenu title={title}
+       <RSubMenu title={"Difficulty"}
                  children={children}/>
     );
 }

@@ -9,10 +9,11 @@ interface OptionsBarProps {
     commitOptions: (q: keyof GameOptions, v: ValidatedOptions) => void
 }
 
-let style = buildStyle(Font.Header, Color.DeepBackground, Display.Flex);
-style.margin = "10px";
-
 export default function ROptionsBar(props: OptionsBarProps) {
+    let style = buildStyle(Font.Header, Color.DeepBackground, Display.Flex);
+    style.height = "120px";
+    style.width = "700px";
+
     return (
         <div style={style}>
             <RDifficultyMenu commitOptions={props.commitOptions}/> 

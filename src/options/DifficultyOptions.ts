@@ -27,7 +27,7 @@ export function defaultDifficultyOptions() {
 export function validateDifficultyOptions(options: DifficultyOptions) {
     return {
         difficulty: options.difficulty,
-        colCount: validateRange(options.colCount, 1, 99, 30),
+        colCount: validateRange(options.colCount, 7, 99, 30),
         rowCount: validateRange(options.rowCount, 1, 99, 16),
         mineCount: validateRange(options.mineCount, 0, 9999, 99),
     } as ValidatedDifficultyOptions;

@@ -10,7 +10,6 @@ interface OptionButtonProps {
 export default function ROptionButton(props: OptionButtonProps) {
     let style = buildStyle(Font.Item, Color.Unselected, Display.Inline);
     style.border = "none";
-    style.marginLeft = "10px";
 
     return (
         <button style={style}

@@ -7,19 +7,20 @@ interface SubMenuProps {
 }
 
 export default function RSubMenu(props: SubMenuProps) {
-    let parentStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.InlineBlock);
+    let parentStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.Flex);
+    parentStyle.flexDirection = "column";
+    parentStyle.justifyContent = "space-between";
     parentStyle.marginRight = "5px";
-    parentStyle.height = "90px";
     parentStyle.padding = "10px";
 
     let titleStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.Block);
 
     return (
-        <span style={parentStyle}>
+        <div style={parentStyle}>
             <div style={titleStyle}>
                 {props.title}
             </div>
             {props.children}
-        </span>
+        </div>
     );
 }

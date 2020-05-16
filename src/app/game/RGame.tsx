@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, CSSProperties } from "react";
 
 import ROptionsBar from "./ROptionsBar";
 import RBoard from "./RBoard";
@@ -10,7 +10,6 @@ import RTimer, { createTimerController } from "./RTimer";
 
 export default function RGame() {
     const [options, setOptions] = useState(defaultOptions());
-    const progressInterface = useRef(null);
 
     function commitOptions(qualifier: keyof GameOptions, validated: any) {
         let newOptions = Object.assign({}, options);
@@ -19,24 +18,33 @@ export default function RGame() {
         setOptions(newOptions);
     }
 
+    const scaleFactor = options.displayOptions.scaleFactor;
+
     const mineCounterController = createMineCounterController();
-    const mineCounter = <RMineCounter initialCount={options.difficultyOptions.mineCount}
-                                      controller={mineCounterController}/>
+    const mineCounter = options.displayOptions.showMineCount ?
+                        <RMineCounter initialCount={options.difficultyOptions.mineCount}
+                                      controller={mineCounterController}
+                                      scaleFactor={scaleFactor}/>
+                        : <span/>;
+
 
     const timerController = createTimerController();
-    const timer = <RTimer controller={timerController}/> 
+    const timer = options.displayOptions.showTimer ?
+                  <RTimer controller={timerController}
+                          scaleFactor={scaleFactor}/> 
+                    : <span/>;
 
     const [gameWidth, gameHeight] = inferCanvasSize(options.difficultyOptions.colCount, 
                                                     options.difficultyOptions.rowCount, 
                                                     options.displayOptions.scaleFactor);
 
     return (
-        <div>
+        <div style={{marginLeft: "10px"} as CSSProperties}>
             <ROptionsBar commitOptions={commitOptions}/>
             <RBoardHeader width={gameWidth}
+                          scaleFactor={scaleFactor}
                           mineCounter={mineCounter}
                           timer={timer}/>
-            <br/>
             <RBoard options={options}
                     width={gameWidth}
                     height={gameHeight}

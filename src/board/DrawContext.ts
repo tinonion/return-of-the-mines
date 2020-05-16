@@ -1,7 +1,7 @@
 import Extents from "../util/Extents";
 
 const DEFAULT_TILE_SIZE = 23;
-const DEFAULT_BORDER_THICKNESS = 8;
+export const DEFAULT_BORDER_THICKNESS = 8;
 
 export interface DrawContext {
     tileSize: number;

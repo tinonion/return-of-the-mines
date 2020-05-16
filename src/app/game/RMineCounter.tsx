@@ -18,7 +18,8 @@ export function createMineCounterController() {
 
 interface MineCounterProps {
     initialCount: number,
-    controller: MineCounterController
+    controller: MineCounterController,
+    scaleFactor: string
 }
 
 export default function RMineCounter(props: MineCounterProps) {
@@ -40,13 +41,16 @@ export default function RMineCounter(props: MineCounterProps) {
         setMineCount(mineCount + 1);
     }
 
+    const scaleFactor = parseInt(props.scaleFactor) / 100;
+
     props.controller.reset = reset;
     props.controller.markMine = markMine;
     props.controller.unmarkMine = unmarkMine;
 
     let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
-    style.marginLeft = "10px";
-    style.padding = "10px";
+    style.padding = `${10 * scaleFactor}px`;
+    style.fontSize = `${24 * scaleFactor}px`;
+    style.width = `${28 * scaleFactor}px`;
 
     return (
         <span style={style}>

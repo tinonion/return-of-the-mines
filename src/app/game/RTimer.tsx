@@ -18,7 +18,8 @@ export function createTimerController() {
 }
 
 interface TimerProps {
-    controller: TimerController
+    controller: TimerController,
+    scaleFactor: string
 }
 
 export default function RTimer(props: TimerProps) {
@@ -48,13 +49,18 @@ export default function RTimer(props: TimerProps) {
     controller.stop = stop;
     controller.reset = reset;
 
+    const scaleFactor = parseInt(props.scaleFactor) / 100;
+
     let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
-    style.marginLeft = "10px";
-    style.padding = "10px";
+    style.padding = `${10 * scaleFactor}px`;
+    style.width = `${30 * scaleFactor}px`;
+    style.fontSize = `${24 * scaleFactor}px`;
 
     return (
         <div style={style}>
-            {time}
+            <div style={{display: "flex", textAlign: "right"}}>
+                {time}
+            </div>
         </div>
     );
 }

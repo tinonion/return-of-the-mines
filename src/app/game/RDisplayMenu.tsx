@@ -23,21 +23,38 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
     const [showMineCount, showTimer] 
         = [displayOptions.showMineCount, displayOptions.showTimer];
 
-    const children = (<React.Fragment>
-        <span style={{display: "inline-block"}}>
-            <ROptionToggle text="Mines"
-                            selected={showMineCount}
-                            handleClick={() => 
-                            { changeDisplayOption("showMineCount", !showMineCount) }}/>
-            <br/>
-            <ROptionToggle text="Timer"
-                            selected={showTimer}
-                            handleClick={() => 
-                            { changeDisplayOption("showTimer", !showTimer); }}/>
-        </span>
+    const inlineButtons = false;
+
+    const children = (
+    <div style={{display: "flex"}}>
+        
+        <div style={{display: "inline-block"}}>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                height: "100%"
+            }}>
+                <ROptionToggle inline={inlineButtons}
+                                text="Mines"
+                                selected={showMineCount}
+                                handleClick={() => 
+                                { changeDisplayOption("showMineCount", !showMineCount) }}/>
+
+                <ROptionToggle inline={inlineButtons}
+                                text="Timer"
+                                selected={showTimer}
+                                handleClick={() => 
+                                { changeDisplayOption("showTimer", !showTimer); }}/>
+            </div>
+        </div>
+
+        <span style={{marginLeft: "15px"}}/>
+
         <RZoomSlider onMouseUp={v => changeDisplayOption("scaleFactor", v)}
                         value={displayOptions.scaleFactor}/>
-    </React.Fragment>);
+
+    </div>);
 
     return (
        <RSubMenu title="Display"
