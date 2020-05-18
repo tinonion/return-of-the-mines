@@ -1,4 +1,4 @@
-import React, { ChangeEvent, CSSProperties } from "react";
+import React, { ChangeEvent } from "react";
 import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 
 interface OptionFieldProps {

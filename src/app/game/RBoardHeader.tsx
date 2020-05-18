@@ -1,12 +1,14 @@
 import buildStyle, { Display, Font, Color } from "../css/StyleBuilder";
 import React, { useState } from "react";
 import { DEFAULT_BORDER_THICKNESS } from "../../board/DrawContext";
+import { BoardController } from "../../board/Board";
 
 interface BoardHeaderProps {
     width: number,
     scaleFactor: string,
     mineCounter: JSX.Element,
-    timer: JSX.Element
+    timer: JSX.Element,
+    boardController: BoardController
 }
 
 export default function RBoardHeader(props: BoardHeaderProps) {
@@ -32,6 +34,7 @@ export default function RBoardHeader(props: BoardHeaderProps) {
     return (
         <div onMouseEnter={e => setMouseOver(true)}
              onMouseLeave={e => setMouseOver(false)}
+             onClick={e => props.boardController.reset()}
             style={style}>
             {props.mineCounter}
             {props.timer}

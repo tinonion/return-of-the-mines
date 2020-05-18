@@ -22,6 +22,14 @@ interface BoardSave {
     imageData: ImageData;
 }
 
+export interface BoardController {
+    reset: VoidFunction
+}
+
+export function createBoardController() {
+    return { reset: () => {} } as BoardController;
+}
+
 export default class Board {
     gameState: GameState;
     canvas: HTMLCanvasElement;
@@ -32,7 +40,8 @@ export default class Board {
     mineCounterController: MineCounterController;
     timerController: TimerController;
 
-    constructor(options: GameOptions, boardCanvas: HTMLCanvasElement, mineCounterController: MineCounterController, timerController: TimerController) {
+    constructor(options: GameOptions, boardCanvas: HTMLCanvasElement, 
+        mineCounterController: MineCounterController, timerController: TimerController, boardController: BoardController) {
         const diffOptions = options.difficultyOptions;
         const displayOptions = options.displayOptions;
 
@@ -48,6 +57,7 @@ export default class Board {
                                diffOptions.mineCount, 
                                this);
 
+        boardController.reset = () => { this.reset(); };
         this.reset();
     }
 

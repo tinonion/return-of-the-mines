@@ -6,15 +6,15 @@ export enum Font {
 
 export const FONT_MAP = new Map([
    [Font.Header, {
-       "font-family": "Helvetica",
-       "font-size": "20px"
+       fontFamily: "Helvetica",
+       fontSize: "20px"
    }],
    [Font.Item, {
-       "font-family": "Helvetica",
-       "font-size": "16px"
+       fontFamily: "Helvetica",
+       fontSize: "16px"
    }],
    [Font.GameInfo, {
-       "font-family": "Helvetica",
-       "font-size": "24px"
+       fontFamily: "Helvetica",
+       fontSize: "24px"
    }]
 ]);

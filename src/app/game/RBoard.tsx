@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useCallback, CSSProperties } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
-import Board from "../../board/Board"
+import Board, { BoardController } from "../../board/Board"
 import { GameOptions } from '../../options/GameOptions';
 import { TimerController } from './RTimer';
 import { MineCounterController } from './RMineCounter';
@@ -15,6 +15,7 @@ interface BoardProps {
     options: GameOptions,
     width: number,
     height: number,
+    boardController: BoardController,
     mineCounterController: MineCounterController,
     timerController: TimerController
 }
@@ -28,7 +29,8 @@ export default function RBoard(props: BoardProps) {
         boardRef.current = new Board(props.options, 
                                      canvasRef.current, 
                                      props.mineCounterController,
-                                     props.timerController);
+                                     props.timerController,
+                                     props.boardController);
 
         // for unmounting board
         return () => {};

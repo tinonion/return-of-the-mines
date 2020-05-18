@@ -1,4 +1,4 @@
-import React, { useState, useRef, CSSProperties } from "react";
+import React, { useState, CSSProperties } from "react";
 
 import ROptionsBar from "./ROptionsBar";
 import RBoard from "./RBoard";
@@ -7,6 +7,7 @@ import { inferCanvasSize } from "../../board/DrawContext";
 import RBoardHeader from "./RBoardHeader";
 import RMineCounter, { createMineCounterController } from "./RMineCounter";
 import RTimer, { createTimerController } from "./RTimer";
+import { createBoardController } from "../../board/Board";
 
 export default function RGame() {
     const [options, setOptions] = useState(defaultOptions());
@@ -38,18 +39,24 @@ export default function RGame() {
                                                     options.difficultyOptions.rowCount, 
                                                     options.displayOptions.scaleFactor);
 
+    const boardController = createBoardController();
+    const board = <RBoard options={options}
+                    width={gameWidth}
+                    height={gameHeight}
+                    mineCounterController={mineCounterController}
+                    timerController={timerController}
+                    boardController={boardController}/>
+
+
     return (
         <div style={{marginLeft: "10px"} as CSSProperties}>
             <ROptionsBar commitOptions={commitOptions}/>
             <RBoardHeader width={gameWidth}
                           scaleFactor={scaleFactor}
                           mineCounter={mineCounter}
-                          timer={timer}/>
-            <RBoard options={options}
-                    width={gameWidth}
-                    height={gameHeight}
-                    mineCounterController={mineCounterController}
-                    timerController={timerController}/>
+                          timer={timer}
+                          boardController={boardController}/>
+            {board}
         </div>
     );
 }
