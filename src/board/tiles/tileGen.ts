@@ -44,7 +44,14 @@ export function generateMineMask(
         mask.push(maskRow);
     }
 
+    console.log(placementPool);
+
     for (let i = 0; i < mineCnt; i++) {
+        if (placementPool.length === 0) {
+            // if no more candidates, break
+            break;
+        }
+
         // i is discarded
         // place one mine every iteration
 
