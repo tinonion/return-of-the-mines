@@ -1,7 +1,7 @@
 import { useState } from "react";
 import React from "react";
 
-import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
+import buildStyle, { Font, Color, Display } from "../../css/StyleBuilder";
 
 export interface TimerController {
     start: () => void,
@@ -58,7 +58,7 @@ export default function RTimer(props: TimerProps) {
 
     return (
         <div style={style}>
-            <div style={{display: "flex", textAlign: "right"}}>
+            <div style={{display: "flex", float: "right"}}>
                 {time}
             </div>
         </div>

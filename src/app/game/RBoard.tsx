@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import createLocalizedKeyListener from "../../events/KeyboardSentinel";
 import Board, { BoardController } from "../../board/Board"
 import { GameOptions } from '../../options/GameOptions';
-import { TimerController } from './RTimer';
-import { MineCounterController } from './RMineCounter';
-
+import { TimerController } from './board_header/RTimer';
+import { MineCounterController } from './board_header/RMineCounter';
 
 const SPACEBAR = 32;
 const C_KEY = 67;
@@ -13,6 +12,7 @@ const N_KEY = 78;
 
 interface BoardProps {
     options: GameOptions,
+    boardShift: number,
     width: number,
     height: number,
     boardController: BoardController,
@@ -37,6 +37,7 @@ export default function RBoard(props: BoardProps) {
     });
 
     const handleKeyDown = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
+        e.preventDefault();
         const board = boardRef.current;
         const [x, y] = refToCanvas(clientX, clientY);
         if (!isPointInCanvas(x, y)) { return; }
@@ -114,7 +115,8 @@ export default function RBoard(props: BoardProps) {
     }
 
     return (
-        <canvas onMouseDown={handleMouseDown}
+        <canvas style={{marginLeft: props.boardShift}}
+                onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseDrag}
                 onMouseUp={handleMouseUp}
                 ref={createBoard}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
+import buildStyle, { Font, Color, Display } from "../../css/StyleBuilder";
 
 export interface MineCounterController {
     reset: () => void,

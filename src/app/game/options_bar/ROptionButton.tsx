@@ -1,6 +1,6 @@
 import React, { MouseEvent } from "react";
 
-import buildStyle, { Display, Font, Color } from "../css/StyleBuilder";
+import buildStyle, { Display, Font, Color } from "../../css/StyleBuilder";
 
 interface OptionButtonProps {
     onClick: (e: MouseEvent) => void,

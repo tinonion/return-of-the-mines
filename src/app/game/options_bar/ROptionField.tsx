@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
+import buildStyle, { Font, Color, Display } from "../../css/StyleBuilder";
 
 interface OptionFieldProps {
     enableInput: boolean;

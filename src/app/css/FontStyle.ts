@@ -18,3 +18,9 @@ export const FONT_MAP = new Map([
        fontSize: "24px"
    }]
 ]);
+
+export function getFontDescriptor(font: Font) {
+    const fontAttributes = FONT_MAP.get(font);
+
+    return `${fontAttributes.fontSize} ${fontAttributes.fontFamily}`;
+}

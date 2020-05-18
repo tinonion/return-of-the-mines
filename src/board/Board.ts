@@ -6,8 +6,8 @@ import * as tileDrawing from "./tiles/tileDrawing";
 import Extents from "../util/Extents";
 import * as arrayUtil from "../util/arrayUtil";
 import { GameOptions } from "../options/GameOptions";
-import { MineCounterController } from "../app/game/RMineCounter";
-import { TimerController } from "../app/game/RTimer";
+import { MineCounterController } from "../app/game/board_header/RMineCounter";
+import { TimerController } from "../app/game/board_header/RTimer";
 
 enum GameState {
     Idle,

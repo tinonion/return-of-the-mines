@@ -1,13 +1,15 @@
 import React, { useState, CSSProperties } from "react";
 
-import ROptionsBar from "./ROptionsBar";
+import ROptionsBar from "./options_bar/ROptionsBar";
 import RBoard from "./RBoard";
 import { defaultOptions, GameOptions } from "../../options/GameOptions";
 import { inferCanvasSize } from "../../board/DrawContext";
-import RBoardHeader from "./RBoardHeader";
-import RMineCounter, { createMineCounterController } from "./RMineCounter";
-import RTimer, { createTimerController } from "./RTimer";
+import RBoardHeader from "./board_header/RBoardHeader";
+import RMineCounter, { createMineCounterController } from "./board_header/RMineCounter";
+import RTimer, { createTimerController } from "./board_header/RTimer";
 import { createBoardController } from "../../board/Board";
+
+const GAME_WIDTH = 900;
 
 export default function RGame() {
     const [options, setOptions] = useState(defaultOptions());
@@ -20,6 +22,11 @@ export default function RGame() {
     }
 
     const scaleFactor = options.displayOptions.scaleFactor;
+    const [boardWidth, boardHeight] = inferCanvasSize(options.difficultyOptions.colCount, 
+                                                    options.difficultyOptions.rowCount, 
+                                                    options.displayOptions.scaleFactor);
+    const shiftScale = document.documentElement.clientWidth - boardWidth - 15; // 15 for padding
+    const boardShift = Math.max((parseInt(options.displayOptions.boardShift) / 100) * shiftScale, 0);
 
     const mineCounterController = createMineCounterController();
     const mineCounter = options.displayOptions.showMineCount ?
@@ -28,30 +35,26 @@ export default function RGame() {
                                       scaleFactor={scaleFactor}/>
                         : <span/>;
 
-
     const timerController = createTimerController();
     const timer = options.displayOptions.showTimer ?
                   <RTimer controller={timerController}
                           scaleFactor={scaleFactor}/> 
                     : <span/>;
 
-    const [gameWidth, gameHeight] = inferCanvasSize(options.difficultyOptions.colCount, 
-                                                    options.difficultyOptions.rowCount, 
-                                                    options.displayOptions.scaleFactor);
-
     const boardController = createBoardController();
     const board = <RBoard options={options}
-                    width={gameWidth}
-                    height={gameHeight}
+                    boardShift={boardShift}
+                    width={boardWidth}
+                    height={boardHeight}
                     mineCounterController={mineCounterController}
                     timerController={timerController}
                     boardController={boardController}/>
 
-
     return (
-        <div style={{marginLeft: "10px"} as CSSProperties}>
+        <div style={{width: GAME_WIDTH, marginLeft: "10px"} as CSSProperties}>
             <ROptionsBar commitOptions={commitOptions}/>
-            <RBoardHeader width={gameWidth}
+            <RBoardHeader boardShift={boardShift}
+                          width={boardWidth}
                           scaleFactor={scaleFactor}
                           mineCounter={mineCounter}
                           timer={timer}

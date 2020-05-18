@@ -1,5 +1,5 @@
 import React from "react";
-import buildStyle, { Display, Font, Color } from "../css/StyleBuilder";
+import buildStyle, { Display, Font, Color } from "../../css/StyleBuilder";
 
 interface SubMenuProps {
     title: string,
