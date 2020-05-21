@@ -51,7 +51,7 @@ export default function RGame() {
                     boardController={boardController}/>
 
     return (
-        <div style={{width: GAME_WIDTH, marginLeft: "10px"} as CSSProperties}>
+        <div style={{width: GAME_WIDTH} as CSSProperties}>
             <ROptionsBar commitOptions={commitOptions}/>
             <RBoardHeader boardShift={boardShift}
                           width={boardWidth}

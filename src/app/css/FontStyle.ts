@@ -1,7 +1,8 @@
 export enum Font {
     Header,
     Item,
-    GameInfo
+    GameInfo,
+    None
 }
 
 export const FONT_MAP = new Map([
@@ -16,7 +17,8 @@ export const FONT_MAP = new Map([
    [Font.GameInfo, {
        fontFamily: "Helvetica",
        fontSize: "24px"
-   }]
+   }],
+   [Font.None, {}]
 ]);
 
 export function getFontDescriptor(font: Font) {

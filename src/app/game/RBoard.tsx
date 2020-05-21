@@ -37,10 +37,11 @@ export default function RBoard(props: BoardProps) {
     });
 
     const handleKeyDown = useCallback((e: KeyboardEvent, clientX: number, clientY: number) => {
-        e.preventDefault();
         const board = boardRef.current;
         const [x, y] = refToCanvas(clientX, clientY);
         if (!isPointInCanvas(x, y)) { return; }
+
+        e.preventDefault();
 
         if (e.keyCode === SPACEBAR) {
             board.handleSpaceDown(x, y);
