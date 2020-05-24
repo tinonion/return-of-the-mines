@@ -37,13 +37,13 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
                 height: "100%"
             }}>
                 <ROptionToggle inline={inlineButtons}
-                                text="Mines"
+                                text="MINES"
                                 selected={showMineCount}
                                 handleClick={() => 
                                 { changeDisplayOption("showMineCount", !showMineCount) }}/>
 
                 <ROptionToggle inline={inlineButtons}
-                                text="Timer"
+                                text="TIMER"
                                 selected={showTimer}
                                 handleClick={() => 
                                 { changeDisplayOption("showTimer", !showTimer); }}/>
@@ -60,7 +60,7 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
     </div>);
 
     return (
-       <RSubMenu title="Display"
+       <RSubMenu title="DISPLAY"
                  children={children}/> 
     );
 }

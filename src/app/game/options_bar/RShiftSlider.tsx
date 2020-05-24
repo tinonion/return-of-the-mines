@@ -4,7 +4,7 @@ import React from "react";
 
 const WIDTH = 200;
 const MARKS = createMarks(WIDTH, [["0%", 0], ["50%", 0.5], ["100%", 1]]);
-const TITLE = createSliderTitle("Board Shift");
+const TITLE = createSliderTitle("BOARD SHIFT");
 
 export default function RShiftSlider(props: SliderProps) {
     const [value, setValue] = useState(0);

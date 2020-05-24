@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import buildStyle, { Font, Color, Display } from "../../css/StyleBuilder";
+import { getTextWidth } from "../../../util/measure";
+
+// 9999 = max possible count of mines left
+const COUNTER_WIDTH = getTextWidth("9999", Font.GameInfo);
 
 export interface MineCounterController {
     reset: () => void,
@@ -50,7 +54,10 @@ export default function RMineCounter(props: MineCounterProps) {
     let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
     style.padding = `${10 * scaleFactor}px`;
     style.fontSize = `${24 * scaleFactor}px`;
-    style.width = `${28 * scaleFactor}px`;
+    style.width = `${COUNTER_WIDTH * scaleFactor}px`;
+    style.textAlign = "end";
+
+    console.log("width", style.width, COUNTER_WIDTH);
 
     return (
         <span style={style}>

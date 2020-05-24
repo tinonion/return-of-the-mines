@@ -5,7 +5,8 @@ export enum Color {
     Unselected,
     Selected,
     Disabled,
-    Enabled
+    Enabled,
+    None  
 }
 
 export const COLOR_MAP = new Map([
@@ -29,5 +30,6 @@ export const COLOR_MAP = new Map([
     }],
     [Color.Enabled, {
         "background": "white"
-    }]
+    }],
+    [Color.None, {}]
 ]);

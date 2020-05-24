@@ -80,22 +80,22 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
 
         <div>
             <ROptionToggle inline={inlineButtons}
-                        text="Beginner"
+                        text="BEGINNER"
                         selected={difficultySelections[0]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Beginner); }}/>
             <ROptionToggle inline={inlineButtons}
-                        text="Intermediate"
+                        text="INTERMEDIATE"
                         selected={difficultySelections[1]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Intermediate); }}/>
             <ROptionToggle inline={inlineButtons}
-                        text="Expert"
+                        text="EXPERT"
                         selected={difficultySelections[2]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Expert); }}/>
             <ROptionToggle inline={inlineButtons}
-                        text="Custom"
+                        text="CUSTOM"
                         selected={difficultySelections[3]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Custom); }}/>
@@ -104,17 +104,17 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
         <div style={{
             }}>
             <ROptionField enableInput={enableDifficultyInput}
-                        text="Width"
+                        text="WIDTH"
                         maxInputLength={2}
                         value={difficultyFields.colCount}
                         onChange={changeColCount}/>
             <ROptionField enableInput={enableDifficultyInput}
-                        text="Height"
+                        text="HEIGHT"
                         maxInputLength={2}
                         value={difficultyFields.rowCount}
                         onChange={changeRowCount}/>
             <ROptionField enableInput={enableDifficultyInput}
-                        text="Mines"
+                        text="MINES"
                         maxInputLength={4}
                         value={difficultyFields.mineCount}
                         onChange={changeMineCount}/>
@@ -125,7 +125,7 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
     </React.Fragment>);
 
     return (
-       <RSubMenu title={"Difficulty"}
+       <RSubMenu title={"DIFFICULTY"}
                  children={children}/>
     );
 }

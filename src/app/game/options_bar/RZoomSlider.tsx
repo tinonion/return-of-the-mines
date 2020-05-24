@@ -5,7 +5,7 @@ import { SliderProps, createMarks, createSliderTitle, createSliderStyle } from "
 
 const WIDTH = 200;
 const MARKS = createMarks(WIDTH, [["0%", 0], ["100%", .33], ["200%", 1]]);
-const TITLE = createSliderTitle("Zoom");
+const TITLE = createSliderTitle("ZOOM");
 
 // doesn't wrap a lower level slider component due to low fidelity
 // value updates, instead uses functions from Slider.tsx
