@@ -1,15 +1,14 @@
 import BestGame, { createBestGame } from "./BestGame";
 import SavedGame from "./SavedGame";
 import { Difficulty } from "../options/difficulty";
+import GameData, { createGameData } from "./GameData";
 
 export default interface User {
     userName: string;
     bestBeginner: BestGame;
     bestIntermediate: BestGame;
     bestExpert: BestGame;
-    gamesWon: number;
-    gamesLost: number;
-    gamesIncomplete: number;
+    gameData: GameData;
     savedGame: SavedGame;
 }
 
@@ -19,9 +18,7 @@ export function mockUser() {
         bestBeginner: createBestGame(Difficulty.Beginner, 1.5432),
         bestIntermediate: createBestGame(Difficulty.Intermediate, 13.6958),
         bestExpert: createBestGame(Difficulty.Expert, 76.2314),
-        gamesWon: 145,
-        gamesLost: 462,
-        gamesIncomplete: 623,
+        gameData: createGameData(1, 46, 623),
         savedGame: {} as SavedGame
     } as User;
 }

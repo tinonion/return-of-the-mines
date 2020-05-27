@@ -9,7 +9,6 @@ interface UserHeaderProps {
 export default function RUserHeader(props: UserHeaderProps) {
     let style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
     style.height = 40;
-    style.padding = "13px";
     style.justifyContent = "space-between";
     style.alignItems = "flex-end";
 

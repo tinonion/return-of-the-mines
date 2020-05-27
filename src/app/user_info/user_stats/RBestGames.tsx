@@ -11,21 +11,19 @@ interface BestGamesProps {
 
 export default function RBestGames(props: BestGamesProps) {
 
-    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
-    const childStyle = buildStyle(Font.Item, Color.Foreground, Display.Block);
+    const style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
 
-    parentStyle.flexDirection = "column";
-    parentStyle.justifyContent = "space-between";
-    parentStyle.padding = "10px";
-    parentStyle.width = "100%";
-    parentStyle.height = "70px";
+    style.flexDirection = "column";
+    style.justifyContent = "space-between";
+    style.height = "70px";
+    style.marginTop = "10px";
 
     const beginnerText = "BEST BEGINNER";
     const intermediateText = "BEST INTERMEDIATE";
     const expertText = "BEST EXPERT";
 
     return (
-        <div style={parentStyle}>
+        <div style={style}>
             <RBestGameRow difficultyText={beginnerText} time={props.bestBeginner.time}/>
             <RBestGameRow difficultyText={intermediateText} time={props.bestIntermediate.time}/>
             <RBestGameRow difficultyText={expertText} time={props.bestExpert.time}/>

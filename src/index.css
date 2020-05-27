@@ -1,11 +1,5 @@
 @font-face {
     font-family: "CustomFont";
-    src: url(./fonts/Minesweeper1-Regular.ttf) format('truetype');
-    src: url(./fonts/Minesweeper1-Regular.woff) format('woff');
-    src: url(./fonts/Minesweeper1-Regular.otf) format('opentype');
-}
-
-@font-face {
-    font-family: "FiraSans";
-    src: url(./fonts/FiraSans-Medium.ttf) format('truetype')
+    src: url(./fonts/MineSweeper-1.ttf) format('truetype');
+    src: url(./fonts/MineSweeper-1.otf) format('opentype');
 }

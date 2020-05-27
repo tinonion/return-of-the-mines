@@ -5,10 +5,8 @@ import './index.css';
 
 import RApp from "./app/RApp";
 
-import "./fonts/Minesweeper1-Regular.ttf";
-import "./fonts/Minesweeper1-Regular.woff";
-import "./fonts/Minesweeper1-Regular.otf";
-import "./fonts/FiraSans-Medium.ttf";
+import "./fonts/MineSweeper-1.ttf";
+import "./fonts/MineSweeper-1.otf";
 
 ReactDOM.render(<RApp/>, document.getElementById('root'));
 

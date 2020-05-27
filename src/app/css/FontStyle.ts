@@ -6,12 +6,12 @@ function getFontStyle(size: number) {
         fontSize: `${size}px`
     } as CSSProperties;
 }
-
 export enum Font {
     Header,
     Title,
     Item,
     GameInfo,
+    Subtitle,
     None
 }
 
@@ -20,6 +20,7 @@ export const FONT_MAP = new Map([
     [Font.Title, getFontStyle(20)],
     [Font.Item, getFontStyle(16)],
     [Font.GameInfo, getFontStyle(24)],
+    [Font.Subtitle, getFontStyle(14)],
     [Font.None, {}]
 ]);
 
