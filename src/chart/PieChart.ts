@@ -1,4 +1,5 @@
 import { DataPair, getDataSum } from "./DataPair";
+import { drawPieceSelection } from "./pieChartDrawing";
 
 // where first line in pie chart is
 const START_ANGLE = Math.PI * 1.5; 
@@ -8,7 +9,8 @@ const CHART_COLORS = ["blue", "red", "orange", "green", "black", "yellow"];
 export interface Piece {
     startAngle: number,
     endAngle: number,
-    dataPair: DataPair,
+    name: string,
+    color: string
 }
 
 export interface PieChart {
@@ -24,48 +26,32 @@ export function createPieChart(size: number, dataPairs: Array<DataPair>): PieCha
     let lastAngle = START_ANGLE;
     let pieces = new Array<Piece>();
 
-    for (let pair of dataPairs) {
+    for (let i = 0; i < dataPairs.length; i++) {
+        const pair = dataPairs[i];
         const fraction = pair[1] / dataSum;
         const nextAngle = lastAngle + (fraction * Math.PI * 2);
 
-        pieces.push({ startAngle: lastAngle, endAngle: nextAngle, dataPair: pair })
+        pieces.push({ startAngle: lastAngle, endAngle: nextAngle, name: pair[0], color: CHART_COLORS[i] })
         lastAngle = nextAngle;
     }
 
     const centerX = size / 2;
     const centerY = centerX;
-    const radius = size * 0.45;
+    const radius = size * 0.42; // make smaller than given size, so it has room to expand
 
     return { centerX, centerY, radius, pieces };
 }
 
-function getArcPoint(startX: number, startY: number, r: number, theta: number) {
-    return [((r * Math.cos(theta)) + startX), ((r * Math.sin(theta)) + startY)];
-}
+export function getSelectionMap(canvas: HTMLCanvasElement, pieChart: PieChart) {
+    let selectionMap = new Map<string, () => void>();
 
-export function drawPieChart(canvas: HTMLCanvasElement, pieChart: PieChart) {
-    const [centerX, centerY, radius] = [pieChart.centerX, pieChart.centerY, pieChart.radius];
-    const pieces = pieChart.pieces;
+    for (let piece of pieChart.pieces) {
+        const selectFun = () => {
+            drawPieceSelection(canvas, pieChart, piece);
+        }
 
-    console.assert(pieces.length != 3, "game data pie chart should be 3 pieces");
+        selectionMap.set(piece.name, selectFun);
+    }
 
-    const ctx = canvas.getContext("2d");
-
-    // draw pie sections
-    for (let i = 0; i < pieces.length; i++) {
-        const piece = pieces[i];
-        const [startAngle, endAngle] = [piece.startAngle, piece.endAngle, piece.dataPair];
-
-        let [arcX1, arcY1] = getArcPoint(centerX, centerY, radius, startAngle);
-
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(arcX1, arcY1);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.lineTo(centerX, centerY);
-        ctx.closePath();
-
-        ctx.fillStyle = CHART_COLORS[i];
-        ctx.fill();
-    }    
+    return selectionMap;
 }

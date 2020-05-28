@@ -1,11 +1,14 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import GameData from "../../../entities/GameData";
-import { createPieChart, drawPieChart } from "../../../chart/PieChart";
+import { createPieChart, getSelectionMap } from "../../../chart/PieChart";
 import { DataPair } from "../../../chart/DataPair";
+import { PieChartController, populateChartController } from "../../../chart/PieChartController";
+import { drawPieChart } from "../../../chart/pieChartDrawing";
 
 interface GameChartProps {
-    size: number,
+    size: number;
     gameData: GameData;
+    chartController: PieChartController;
 }
 
 export default function RGameChart(props: GameChartProps) {
@@ -21,9 +24,15 @@ export default function RGameChart(props: GameChartProps) {
                                             ["LOST", gameData.gamesLost],
                                             ["INCOMPLETE", gameData.gamesIncompleted]];
 
-        const gamesPieChart = createPieChart(props.size, dataPairs);
+        const pieChart = createPieChart(props.size, dataPairs);
 
-        drawPieChart(canvasRef.current, gamesPieChart);
+        const selectionMap = getSelectionMap(canvasRef.current, pieChart);
+        function drawChart() { 
+            drawPieChart(canvasRef.current, pieChart); 
+        }
+        populateChartController(props.chartController, selectionMap, drawChart);
+
+        drawChart();
     });
 
     return (
