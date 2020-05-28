@@ -1,4 +1,3 @@
-import BestGame from "../../../entities/BestGame";
 import React from "react";
 import buildStyle, { Display, Font, Color } from "../../css/StyleBuilder";
 
