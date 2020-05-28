@@ -24,9 +24,9 @@ export default function RBestGames(props: BestGamesProps) {
 
     return (
         <div style={style}>
-            <RBestGameRow difficultyText={beginnerText} time={props.bestBeginner.time}/>
-            <RBestGameRow difficultyText={intermediateText} time={props.bestIntermediate.time}/>
             <RBestGameRow difficultyText={expertText} time={props.bestExpert.time}/>
+            <RBestGameRow difficultyText={intermediateText} time={props.bestIntermediate.time}/>
+            <RBestGameRow difficultyText={beginnerText} time={props.bestBeginner.time}/>
         </div>
     );
 }

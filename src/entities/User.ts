@@ -1,6 +1,6 @@
 import BestGame, { createBestGame } from "./BestGame";
 import SavedGame from "./SavedGame";
-import { Difficulty } from "../options/difficulty";
+import { Difficulty } from "../options/Difficulty";
 import GameData, { createGameData } from "./GameData";
 
 export default interface User {

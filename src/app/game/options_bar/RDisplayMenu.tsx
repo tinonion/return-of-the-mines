@@ -24,8 +24,6 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
     const [showMineCount, showTimer] 
         = [displayOptions.showMineCount, displayOptions.showTimer];
 
-    const inlineButtons = false;
-
     const children = (
     <div style={{display: "flex"}}>
         
@@ -36,14 +34,12 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
                 justifyContent: "space-between",
                 height: "100%"
             }}>
-                <ROptionToggle inline={inlineButtons}
-                                text="MINES"
+                <ROptionToggle text="MINES"
                                 selected={showMineCount}
                                 handleClick={() => 
                                 { changeDisplayOption("showMineCount", !showMineCount) }}/>
 
-                <ROptionToggle inline={inlineButtons}
-                                text="TIMER"
+                <ROptionToggle text="TIMER"
                                 selected={showTimer}
                                 handleClick={() => 
                                 { changeDisplayOption("showTimer", !showTimer); }}/>

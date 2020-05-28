@@ -89,7 +89,7 @@ function drawTile(
     if (tileDrawProps.tileText != null) {
         const tileSize = drawContext.tileSize;
 
-        ctx.font = String(tileSize - 10) + "px bold Arial";
+        ctx.font = String(tileSize - 10) + "px CustomFont";
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
 

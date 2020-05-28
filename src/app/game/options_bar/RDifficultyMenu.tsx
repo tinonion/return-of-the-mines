@@ -4,7 +4,7 @@ import ROptionToggle from "./ROptionToggle";
 import ROptionField from "./ROptionField";
 import ROptionButton from "./ROptionButton";
 import * as diffOptions from "../../../options/DifficultyOptions";
-import { Difficulty, DIFFICULTY_MAP } from "../../../options/difficulty";
+import { Difficulty, DIFFICULTY_MAP } from "../../../options/Difficulty";
 import { GameOptions, ValidatedOptions } from "../../../options/GameOptions";
 
 interface DifficultyMenuProps {
@@ -68,41 +68,39 @@ export default function RDifficultyMenu(props: DifficultyMenuProps) {
         changeOptionField("mineCount", newValue);
     }
 
-    let difficultySelections = new Array<boolean>(false, false, false, false);
+    let difficultySelections = [false, false, false, false];
     difficultySelections[difficultyFields.difficulty] = true;
 
     const enableDifficultyInput = difficultyFields.difficulty === Difficulty.Custom;
 
-    const inlineButtons = true;
+    const flexRowStyle = {
+        display: "flex",
+        flex: "row"
+    };
 
     const children = (
     <React.Fragment>
 
-        <div>
-            <ROptionToggle inline={inlineButtons}
-                        text="BEGINNER"
+        <div style={flexRowStyle}>
+            <ROptionToggle text="BEGINNER"
                         selected={difficultySelections[0]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Beginner); }}/>
-            <ROptionToggle inline={inlineButtons}
-                        text="INTERMEDIATE"
+            <ROptionToggle text="INTERMEDIATE"
                         selected={difficultySelections[1]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Intermediate); }}/>
-            <ROptionToggle inline={inlineButtons}
-                        text="EXPERT"
+            <ROptionToggle text="EXPERT"
                         selected={difficultySelections[2]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Expert); }}/>
-            <ROptionToggle inline={inlineButtons}
-                        text="CUSTOM"
+            <ROptionToggle text="CUSTOM"
                         selected={difficultySelections[3]}
                         handleClick={() => 
                                 { changeDifficulty(Difficulty.Custom); }}/>
         </div>
 
-        <div style={{
-            }}>
+        <div style={flexRowStyle}>
             <ROptionField enableInput={enableDifficultyInput}
                         text="WIDTH"
                         maxInputLength={2}

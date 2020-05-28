@@ -12,7 +12,7 @@ interface UserInfoProps {
 }
 
 export default function RUserInfo(props: UserInfoProps) {
-    let style = buildStyle(Font.None, Color.ShallowBackground, Display.InlineBlock);
+    let style = buildStyle(Font.None, Color.ShallowBackground, Display.Block);
     style.width = WIDTH;
     style.padding = "10px";
 

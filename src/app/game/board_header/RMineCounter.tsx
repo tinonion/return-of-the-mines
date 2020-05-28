@@ -57,8 +57,6 @@ export default function RMineCounter(props: MineCounterProps) {
     style.width = `${COUNTER_WIDTH * scaleFactor}px`;
     style.textAlign = "end";
 
-    console.log("width", style.width, COUNTER_WIDTH);
-
     return (
         <span style={style}>
             {mineCount}
