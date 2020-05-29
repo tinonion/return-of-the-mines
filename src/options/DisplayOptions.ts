@@ -1,15 +1,13 @@
 export interface DisplayOptions {
     showMineCount: boolean,
     showTimer: boolean,
-    scaleFactor: string,
-    boardShift: string
+    scaleFactor: string
 }
 
 export function defaultDisplayOptions() {
     return {
         showMineCount: true,
         showTimer: true,
-        scaleFactor: "100",
-        boardShift: "0"
+        scaleFactor: "100"
     } as DisplayOptions;
 }

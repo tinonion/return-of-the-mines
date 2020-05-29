@@ -12,25 +12,29 @@ interface UserInfoProps {
 }
 
 export default function RUserInfo(props: UserInfoProps) {
-    let style = buildStyle(Font.None, Color.ShallowBackground, Display.Block);
+    let style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    style.flexDirection = "column";
     style.width = WIDTH;
     style.padding = "10px";
 
     const user = mockUser();
 
     const historyHeaderStyle = buildStyle(Font.Title, Color.ShallowBackground, Display.Block);
-    historyHeaderStyle.marginTop = "30px";
+    historyHeaderStyle.height = "5%";
     const gd = user.gameData;
     const totalGames = gd.gamesWon + gd.gamesLost + gd.gamesIncompleted;
 
     return (
         <div style={style}>
-            <RUserHeader userData={user}/>
-            <RBestGames bestBeginner={user.bestBeginner}
+            <RUserHeader height="10%"
+                         userData={user}/>
+            <RBestGames height="35%"
+                        bestBeginner={user.bestBeginner}
                         bestIntermediate={user.bestIntermediate}
                         bestExpert={user.bestExpert}/>
             <div style={historyHeaderStyle}>{`${totalGames} GAMES PLAYED`}</div>
-            <RGameHistory gameData={user.gameData}/>
+            <RGameHistory height="50%"
+                          gameData={user.gameData}/>
         </div>
     );
 }

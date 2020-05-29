@@ -14,12 +14,13 @@ export default function RLeaderboards(props: LeaderboardProps) {
     const [selectedDifficulty, setSelectedDifficulty] = useState(Difficulty.Expert);
     const [selectedTimeScale, setSelectedTimeScale] = useState(TimeScale.AllTime);
 
-    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Block);
+    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    parentStyle.flexDirection = "column";
     parentStyle.padding = "10px";
-    parentStyle.marginTop = "5px";
-    parentStyle.width = "375px";
+    parentStyle.paddingLeft = "30px";
 
     const headerStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.Block);
+    headerStyle.height = "10%";
 
     const leaderboardCategory = mockLeaderboardCategory();
 
@@ -29,11 +30,13 @@ export default function RLeaderboards(props: LeaderboardProps) {
     return (
         <div style={parentStyle}>
             <div style={headerStyle}>LEADERBOARDS</div>
-            <RCategorySelector selectedDifficulty={selectedDifficulty}
+            <RCategorySelector height="20%"
+                               selectedDifficulty={selectedDifficulty}
                                selectedTimeScale={selectedTimeScale}
                                setDifficulty={setDifficulty}
                                setTimeScale={setTimeScale}/>
-            <RLeaderboardEntries category={leaderboardCategory}/>
+            <RLeaderboardEntries height="70%"
+                                 category={leaderboardCategory}/>
         </div>
     );
 }

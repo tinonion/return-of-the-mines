@@ -5,6 +5,7 @@ import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 import ROptionToggle from "../game/options_bar/ROptionToggle";
 
 interface CategorySelectorProps {
+    height: string,
     selectedDifficulty: Difficulty,
     selectedTimeScale: TimeScale,
     setDifficulty: (d: Difficulty) => void,
@@ -12,11 +13,13 @@ interface CategorySelectorProps {
 }
 
 export default function RCategorySelector(props: CategorySelectorProps) {
-    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Block);
+    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    parentStyle.flexDirection = "column";
+    parentStyle.height = props.height;
+
     const rowStyle = {
         display: "flex",
         flex: "row",
-        marginTop: "10px"
     }
 
     const timeScaleSelections = [false, false, false];
@@ -25,8 +28,11 @@ export default function RCategorySelector(props: CategorySelectorProps) {
     const difficultySelections = [false, false, false, false];
     difficultySelections[props.selectedDifficulty] = true;
 
+    const spacerStyle = { height: "5%" };
+
     return (
         <div style={parentStyle}>
+            <div style={spacerStyle}/>
             <div style={rowStyle}>
                 <ROptionToggle text={"ALL TIME"} 
                                selected={timeScaleSelections[0]} 
@@ -38,6 +44,7 @@ export default function RCategorySelector(props: CategorySelectorProps) {
                                selected={timeScaleSelections[2]} 
                                handleClick={() => { props.setTimeScale(TimeScale.Daily); }}/>
             </div>
+            <div style={spacerStyle}/>
             <div style={rowStyle}>
                 <ROptionToggle text={"EXPERT"} 
                                selected={difficultySelections[2]} 
@@ -49,6 +56,7 @@ export default function RCategorySelector(props: CategorySelectorProps) {
                                selected={difficultySelections[0]} 
                                handleClick={() => { props.setDifficulty(Difficulty.Beginner); }}/>
             </div>
+            <div style={spacerStyle}/>
         </div>
     );
 }

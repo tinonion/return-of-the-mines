@@ -1,5 +1,5 @@
 import buildStyle, { Font, Color, Display } from "../../css/StyleBuilder";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PieChartController } from "../../../chart/PieChartController";
 
 function getPercentageString(total: number, part: number, name: string) {
@@ -11,15 +11,16 @@ function getListingColor(isSelected: boolean) {
 }
 
 interface GameHistoryListingsProps {
+    height: number,
     won: number,
     lost: number,
     incomplete: number,
-    chartController: PieChartController 
+    chartControllerRef: React.MutableRefObject<PieChartController>
 }
 
 export default function RGameHistoryListings(props: GameHistoryListingsProps) {
     function selectPiece(name: string) {
-        props.chartController.selectionMap.get(name)();
+        props.chartControllerRef.current.selectionMap.get(name)();
 
         if (name === "WON") {
             setSelections([true, false, false]);
@@ -33,7 +34,7 @@ export default function RGameHistoryListings(props: GameHistoryListingsProps) {
     }
 
     function restoreChart() {
-        props.chartController.restorePieChart();
+        props.chartControllerRef.current.restorePieChart();
         setSelections([false, false, false]);
     }
 
@@ -42,15 +43,18 @@ export default function RGameHistoryListings(props: GameHistoryListingsProps) {
     const style = buildStyle(Font.Item, Color.ShallowBackground, Display.Flex);
     style.flexDirection = "column";
     style.justifyContent = "space-between";
-    style.height = "100%";
+    style.height = props.height;
 
     const total = props.won + props.lost + props.incomplete;
 
+    const spacerStyle = { height: "15%" };
+
     return (
-        <span style={{ display: "inline", height: "100%" }}>
+         <span style={{ display: "inline", height: "100%" }}>
 
             <div style={style}>
-                <div style={{ marginTop: "50px", color: getListingColor(selections[0]) }}
+                <div style={spacerStyle}/>
+                <div style={{ color: getListingColor(selections[0]) }}
                      onMouseOver={(e: any) => { selectPiece("WON"); }}
                      onMouseLeave={(e: any) => { restoreChart(); }}>
                     {getPercentageString(total, props.won, "WON")}
@@ -60,11 +64,12 @@ export default function RGameHistoryListings(props: GameHistoryListingsProps) {
                      onMouseLeave={(e: any) => { restoreChart(); }}>
                     {getPercentageString(total, props.lost, "LOST")}
                 </div>
-                <div style={{ marginBottom: "50px", color: getListingColor(selections[2]) }}
+                <div style={{ color: getListingColor(selections[2]) }}
                      onMouseOver={(e: any) => { selectPiece("INCOMPLETE"); }}
                      onMouseLeave={(e: any) => { restoreChart(); }}>
                     {getPercentageString(total, props.incomplete, "INCOMPLETE")}
                 </div>
+                <div style={spacerStyle}/>
             </div>
         
         </span>

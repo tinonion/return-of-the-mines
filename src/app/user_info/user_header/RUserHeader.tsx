@@ -3,12 +3,13 @@ import buildStyle, { Color, Font, Display } from "../../css/StyleBuilder";
 import User from "../../../entities/User";
 
 interface UserHeaderProps {
+    height: string,
     userData: User
 }
 
 export default function RUserHeader(props: UserHeaderProps) {
     let style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
-    style.height = 40;
+    style.height = props.height;
     style.justifyContent = "space-between";
     style.alignItems = "flex-end";
 

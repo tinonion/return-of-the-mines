@@ -12,7 +12,6 @@ const N_KEY = 78;
 
 interface BoardProps {
     options: GameOptions,
-    boardShift: number,
     width: number,
     height: number,
     boardController: BoardController,
@@ -116,8 +115,7 @@ export default function RBoard(props: BoardProps) {
     }
 
     return (
-        <canvas style={{marginLeft: props.boardShift}}
-                onMouseDown={handleMouseDown}
+        <canvas onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseDrag}
                 onMouseUp={handleMouseUp}
                 ref={createBoard}

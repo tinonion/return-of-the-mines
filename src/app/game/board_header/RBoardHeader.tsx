@@ -6,7 +6,6 @@ import { BoardController } from "../../../board/Board";
 interface BoardHeaderProps {
     width: number,
     scaleFactor: string,
-    boardShift: number,
     mineCounter: JSX.Element,
     timer: JSX.Element,
     boardController: BoardController
@@ -28,7 +27,6 @@ export default function RBoardHeader(props: BoardHeaderProps) {
     style.width = props.width - (borderWidth * 2) - (padding * 2);
     style.height = 48 * scaleFactor;
     style.marginTop = "10px";
-    style.marginLeft = props.boardShift;
     style.padding = `${padding}px`;
 
     style.background = mouseOver ? "gray" : "lightgray";

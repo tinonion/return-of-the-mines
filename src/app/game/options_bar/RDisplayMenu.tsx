@@ -4,7 +4,6 @@ import { ValidatedOptions, GameOptions } from "../../../options/GameOptions";
 import ROptionToggle from "./ROptionToggle";
 import { defaultDisplayOptions, DisplayOptions } from "../../../options/DisplayOptions";
 import RZoomSlider from "./RZoomSlider";
-import RShiftSlider from "./RShiftSlider";
 
 interface DisplayMenuProps {
     commitOptions: (o: keyof GameOptions, v: ValidatedOptions) => void
@@ -49,10 +48,6 @@ export default function RDisplayMenu(props: DisplayMenuProps) {
         <span style={{marginLeft: "15px"}}/>
 
         <RZoomSlider onMouseUp={v => changeDisplayOption("scaleFactor", v)}/>
-
-        <span style={{marginLeft: "15px"}}/>
-
-        <RShiftSlider onMouseUp={v => changeDisplayOption("boardShift", v)}/>
     </div>);
 
     return (

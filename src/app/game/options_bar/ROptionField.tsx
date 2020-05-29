@@ -25,7 +25,7 @@ export default function ROptionField(props: OptionFieldProps) {
     const titleStyle = buildStyle(Font.Item, Color.Foreground, Display.Inline);
 
     const fieldStyle = buildStyle(Font.Item, Color.Foreground, Display.Inline);
-    fieldStyle.width = (props.maxInputLength * 9).toString() + "px";
+    fieldStyle.width = (props.maxInputLength * 12).toString() + "px";
     fieldStyle.padding = "2px";
     fieldStyle.marginLeft = "3px";
 

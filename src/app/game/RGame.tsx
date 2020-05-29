@@ -25,8 +25,6 @@ export default function RGame() {
     const [boardWidth, boardHeight] = inferCanvasSize(options.difficultyOptions.colCount, 
                                                     options.difficultyOptions.rowCount, 
                                                     options.displayOptions.scaleFactor);
-    const shiftScale = document.documentElement.clientWidth - boardWidth - 15; // 15 for padding
-    const boardShift = Math.max((parseInt(options.displayOptions.boardShift) / 100) * shiftScale, 0);
 
     const mineCounterController = createMineCounterController();
     const mineCounter = options.displayOptions.showMineCount ?
@@ -43,19 +41,23 @@ export default function RGame() {
 
     const boardController = createBoardController();
     const board = <RBoard options={options}
-                    boardShift={boardShift}
                     width={boardWidth}
                     height={boardHeight}
                     mineCounterController={mineCounterController}
                     timerController={timerController}
                     boardController={boardController}/>
 
+    const gameStyle = {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    } as CSSProperties;
+
     return (
-        <div style={{width: GAME_WIDTH} as CSSProperties}>
+        <div style={gameStyle}>
             <ROptionsBar commitOptions={commitOptions}/>
-            <RBoardHeader boardShift={boardShift}
+            <RBoardHeader scaleFactor={scaleFactor}
                           width={boardWidth}
-                          scaleFactor={scaleFactor}
                           mineCounter={mineCounter}
                           timer={timer}
                           boardController={boardController}/>
