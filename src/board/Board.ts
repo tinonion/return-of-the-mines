@@ -185,9 +185,6 @@ export default class Board {
     handleLeftClick(canvasX: number, canvasY: number) {
         if (this.inTiles(canvasX, canvasY) && !this.isBoardLocked()) {
             const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
-            if (this.gameState === GameState.Idle) {
-                this.startGame(tileCol, tileRow);
-            }
 
             // handle tile click
             this.selectedTile = [tileCol, tileRow];
@@ -254,6 +251,10 @@ export default class Board {
 
     handleMouseUp(canvasX: number, canvasY: number) {
         const [tileCol, tileRow] = this.getTileInds(canvasX, canvasY);
+        if (this.gameState === GameState.Idle) {
+            this.startGame(tileCol, tileRow);
+        }
+
         if (this.selectedTile != null &&
             !arrayUtil.areEqual([tileCol, tileRow], this.selectedTile) &&
             this.getSelectedState() === TileState.Pressed) {

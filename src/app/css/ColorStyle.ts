@@ -5,7 +5,7 @@ export enum Color {
     None  
 }
 
-export const COLOR_MAP = new Map([
+export let COLOR_MAP = new Map([
     [Color.Primary, {
         "background": "gray"
     }],
