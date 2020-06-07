@@ -12,7 +12,7 @@ export type Mark = [string, number];
 
 const DEFAULT_FONT = Font.Item;
 
-const DEFAULT_MARK_STYLE = buildStyle(DEFAULT_FONT, Color.Foreground, Display.InlineBlock);
+const DEFAULT_MARK_STYLE = buildStyle(DEFAULT_FONT, Color.Tertiary, Display.InlineBlock);
 DEFAULT_MARK_STYLE.position = "relative";
 DEFAULT_MARK_STYLE.top = "2px";
 
@@ -44,7 +44,7 @@ export function createMarks(sliderPxLength: number, marks: Array<Mark>): Array<J
 }
 
 export function createSliderTitle(title: string) {
-    const style = buildStyle(Font.Item, Color.Foreground, Display.Block);
+    const style = buildStyle(Font.Item, Color.Tertiary, Display.Block);
 
     return (
         <div style={style}>
@@ -54,7 +54,7 @@ export function createSliderTitle(title: string) {
 }
 
 export function createSliderStyle(width: number) {
-    const sliderStyle = buildStyle(Font.Item, Color.Foreground, Display.InlineBlock);
+    const sliderStyle = buildStyle(Font.Item, Color.Tertiary, Display.InlineBlock);
     sliderStyle.width = width;
     sliderStyle.padding = "5px 10px 5px 10px";
 

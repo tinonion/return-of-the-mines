@@ -1,5 +1,5 @@
 import { LeaderboardEntry, mockEntry } from "./LeaderboardEntry";
-import { Difficulty } from "../options/Difficulty";
+import { Difficulty } from "../options/difficulty";
 import { TimeScale } from "../options/TimeScale";
 
 export interface LeaderboardCategory {

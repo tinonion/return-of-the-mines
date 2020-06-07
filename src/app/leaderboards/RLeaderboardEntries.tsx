@@ -6,8 +6,10 @@ function createEntryRows(category: LeaderboardCategory) {
     let entries = category.entries;
     let entryRows = []
 
-    let evenStyle = buildStyle(Font.Item, Color.ShallowBackground, Display.Flex);
-    evenStyle.justifyContent = "space-between";
+    let evenStyle = buildStyle(Font.Item, Color.Primary, Display.Flex);
+    evenStyle.height = "100%";
+    evenStyle.alignItems = "center";
+    evenStyle.paddingLeft = "3px";
 
     let oddStyle = Object.assign({}, evenStyle);
     oddStyle.background = "lightgrey";
@@ -16,10 +18,13 @@ function createEntryRows(category: LeaderboardCategory) {
         const entry = entries[i];
         const newRow = (
             <div key={i} style={i % 2 === 0 ? oddStyle : evenStyle}>
-                <span>
-                    {`${i + 1}) ${entry.username.toUpperCase()}`}
+                <span style={{ width: "40px" }}>
+                    {`${i + 1}.`}
                 </span>
-                <span>
+                <span style={{ width: "280px" }}>
+                    {entry.username.toUpperCase()}
+                </span>
+                <span style={{ width: "30px" }}>
                     {`${entry.time}s`}
                 </span>
             </div>
@@ -37,7 +42,7 @@ interface LeaderboardEntriesProps {
 }
 
 export default function RLeaderboardEntries(props: LeaderboardEntriesProps) {
-    const style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    const style = buildStyle(Font.None, Color.Primary, Display.Flex);
     style.flexDirection = "column";
     style.justifyContent = "space-between";
     style.height = props.height;

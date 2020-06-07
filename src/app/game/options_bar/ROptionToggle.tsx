@@ -8,7 +8,7 @@ interface OptionButtonProps {
 }
 
 export default function ROptionToggle(props: OptionButtonProps) {
-    const selectedDescriptor = props.selected ? Color.Selected : Color.Unselected;
+    const selectedDescriptor = props.selected ? Color.Secondary : Color.Tertiary;
 
     let style = buildStyle(Font.Item, selectedDescriptor, Display.Block);
     style.padding = "4px";

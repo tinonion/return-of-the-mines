@@ -1,7 +1,7 @@
 import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
 import React, { useState } from "react";
 import { mockLeaderboardCategory } from "../../entities/LeaderboardCategory";
-import { Difficulty } from "../../options/Difficulty";
+import { Difficulty } from "../../options/difficulty";
 import { TimeScale } from "../../options/TimeScale";
 import RCategorySelector from "./RCategorySelector";
 import RLeaderboardEntries from "./RLeaderboardEntries";
@@ -14,12 +14,12 @@ export default function RLeaderboards(props: LeaderboardProps) {
     const [selectedDifficulty, setSelectedDifficulty] = useState(Difficulty.Expert);
     const [selectedTimeScale, setSelectedTimeScale] = useState(TimeScale.AllTime);
 
-    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    const parentStyle = buildStyle(Font.None, Color.Primary, Display.Flex);
     parentStyle.flexDirection = "column";
     parentStyle.padding = "10px";
     parentStyle.paddingLeft = "30px";
 
-    const headerStyle = buildStyle(Font.Header, Color.ShallowBackground, Display.Block);
+    const headerStyle = buildStyle(Font.Header, Color.Primary, Display.Block);
     headerStyle.height = "10%";
 
     const leaderboardCategory = mockLeaderboardCategory();

@@ -7,7 +7,7 @@ interface LoginProps {
 
 export default function RLogin(props: LoginProps) {
 
-    let style = buildStyle(Font.Title, Color.Foreground, Display.Block);
+    let style = buildStyle(Font.Title, Color.Tertiary, Display.Block);
     style.padding = "5px";
 
     return (

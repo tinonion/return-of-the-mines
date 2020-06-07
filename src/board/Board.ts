@@ -174,7 +174,7 @@ export default class Board {
     toggleFlagPlacement(tileCol: number, tileRow: number) {
         const tileState = this.tiles.getTileState(tileCol, tileRow);
 
-        if (tileState === TileState.Unpressed) {
+        if (tileState === TileState.Unpressed || tileState === TileState.Pressed) {
             this.placeFlag(tileCol, tileRow);
 
         } else if (tileState === TileState.Flag) {

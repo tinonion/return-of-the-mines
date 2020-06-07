@@ -7,8 +7,8 @@ interface BestGameRowProps {
 }
 
 export default function RBestGameRow(props: BestGameRowProps) {
-    const parentStyle = buildStyle(Font.Item, Color.ShallowBackground, Display.Flex);
-    const childStyle = buildStyle(Font.Item, Color.ShallowBackground, Display.Block);
+    const parentStyle = buildStyle(Font.Item, Color.Primary, Display.Flex);
+    const childStyle = buildStyle(Font.Item, Color.Primary, Display.Block);
 
     parentStyle.justifyContent = "space-between";
 

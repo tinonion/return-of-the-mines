@@ -10,7 +10,7 @@ interface OptionsBarProps {
 }
 
 export default function ROptionsBar(props: OptionsBarProps) {
-    let style = buildStyle(Font.Title, Color.DeepBackground, Display.Flex);
+    let style = buildStyle(Font.Title, Color.Secondary, Display.Flex);
     style.height = "120px";
 
     return (

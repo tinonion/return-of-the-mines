@@ -8,7 +8,7 @@ interface OptionButtonProps {
 }
 
 export default function ROptionButton(props: OptionButtonProps) {
-    let style = buildStyle(Font.Item, Color.Unselected, Display.Inline);
+    let style = buildStyle(Font.Item, Color.Tertiary, Display.Inline);
     style.border = "none";
 
     return (

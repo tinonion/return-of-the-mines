@@ -18,7 +18,7 @@ export default function RBoardHeader(props: BoardHeaderProps) {
     const borderWidth = DEFAULT_BORDER_THICKNESS * scaleFactor;
     const padding = 10 * scaleFactor;
 
-    let style = buildStyle(Font.Title, Color.DeepBackground, Display.Flex);
+    let style = buildStyle(Font.Title, Color.Secondary, Display.Flex);
     style.justifyContent = "space-between";
     style.border = "black";
     style.borderStyle = "solid";

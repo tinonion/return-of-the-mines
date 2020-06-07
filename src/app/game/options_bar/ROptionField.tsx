@@ -19,12 +19,12 @@ export default function ROptionField(props: OptionFieldProps) {
         props.onChange(newValue);
     }
 
-    const parentStyle = buildStyle(Font.Item, Color.Foreground, Display.Inline);
+    const parentStyle = buildStyle(Font.Item, Color.Tertiary, Display.Inline);
     parentStyle.padding = "5px";
 
-    const titleStyle = buildStyle(Font.Item, Color.Foreground, Display.Inline);
+    const titleStyle = buildStyle(Font.Item, Color.Tertiary, Display.Inline);
 
-    const fieldStyle = buildStyle(Font.Item, Color.Foreground, Display.Inline);
+    const fieldStyle = buildStyle(Font.Item, Color.Tertiary, Display.Inline);
     fieldStyle.width = (props.maxInputLength * 12).toString() + "px";
     fieldStyle.padding = "2px";
     fieldStyle.marginLeft = "3px";

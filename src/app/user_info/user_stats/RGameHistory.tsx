@@ -12,7 +12,7 @@ interface GameHistoryProps {
 }
 
 export default function RGameHistory(props: GameHistoryProps) {
-    const style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    const style = buildStyle(Font.None, Color.Primary, Display.Flex);
     style.justifyContent = "space-between";
     style.height = props.height;
 

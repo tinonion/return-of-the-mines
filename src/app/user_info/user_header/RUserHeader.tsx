@@ -8,7 +8,7 @@ interface UserHeaderProps {
 }
 
 export default function RUserHeader(props: UserHeaderProps) {
-    let style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    let style = buildStyle(Font.None, Color.Primary, Display.Flex);
     style.height = props.height;
     style.justifyContent = "space-between";
     style.alignItems = "flex-end";

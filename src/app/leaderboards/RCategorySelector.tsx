@@ -1,4 +1,4 @@
-import { Difficulty } from "../../options/Difficulty";
+import { Difficulty } from "../../options/difficulty";
 import { TimeScale } from "../../options/TimeScale";
 import React from "react";
 import buildStyle, { Font, Color, Display } from "../css/StyleBuilder";
@@ -13,7 +13,7 @@ interface CategorySelectorProps {
 }
 
 export default function RCategorySelector(props: CategorySelectorProps) {
-    const parentStyle = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    const parentStyle = buildStyle(Font.None, Color.Primary, Display.Flex);
     parentStyle.flexDirection = "column";
     parentStyle.height = props.height;
 

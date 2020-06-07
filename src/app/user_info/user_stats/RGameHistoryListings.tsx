@@ -40,7 +40,7 @@ export default function RGameHistoryListings(props: GameHistoryListingsProps) {
 
     const [selections, setSelections] = useState([false, false, false]);
 
-    const style = buildStyle(Font.Item, Color.ShallowBackground, Display.Flex);
+    const style = buildStyle(Font.Item, Color.Primary, Display.Flex);
     style.flexDirection = "column";
     style.justifyContent = "space-between";
     style.height = props.height;

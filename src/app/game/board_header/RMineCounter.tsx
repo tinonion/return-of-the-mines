@@ -51,7 +51,7 @@ export default function RMineCounter(props: MineCounterProps) {
     props.controller.markMine = markMine;
     props.controller.unmarkMine = unmarkMine;
 
-    let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
+    let style = buildStyle(Font.GameInfo, Color.Tertiary, Display.InlineBlock);
     style.padding = `${10 * scaleFactor}px`;
     style.fontSize = `${24 * scaleFactor}px`;
     style.width = `${COUNTER_WIDTH * scaleFactor}px`;

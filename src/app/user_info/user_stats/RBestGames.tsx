@@ -12,7 +12,7 @@ interface BestGamesProps {
 
 export default function RBestGames(props: BestGamesProps) {
 
-    const style = buildStyle(Font.None, Color.ShallowBackground, Display.Flex);
+    const style = buildStyle(Font.None, Color.Primary, Display.Flex);
 
     style.flexDirection = "column";
     style.justifyContent = "space-around";

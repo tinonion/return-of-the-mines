@@ -1,4 +1,4 @@
-import { Difficulty } from "../options/Difficulty";
+import { Difficulty } from "../options/difficulty";
 import Replay from "./Replay";
 
 export default interface BestGame {

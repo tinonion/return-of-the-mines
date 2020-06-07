@@ -51,7 +51,7 @@ export default function RTimer(props: TimerProps) {
 
     const scaleFactor = parseInt(props.scaleFactor) / 100;
 
-    let style = buildStyle(Font.GameInfo, Color.Foreground, Display.InlineBlock);
+    let style = buildStyle(Font.GameInfo, Color.Tertiary, Display.InlineBlock);
     style.padding = `${10 * scaleFactor}px`;
     style.width = `${30 * scaleFactor}px`;
     style.fontSize = `${24 * scaleFactor}px`;

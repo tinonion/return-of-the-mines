@@ -1,6 +1,6 @@
 import { validateRange } from "./validation";
 // @ts-ignore
-import { Difficulty } from "./Difficulty";
+import { Difficulty } from "./difficulty";
 
 export interface DifficultyOptions {
     difficulty: Difficulty;

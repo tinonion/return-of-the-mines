@@ -4,7 +4,7 @@ import ROptionToggle from "./ROptionToggle";
 import ROptionField from "./ROptionField";
 import ROptionButton from "./ROptionButton";
 import * as diffOptions from "../../../options/DifficultyOptions";
-import { Difficulty, DIFFICULTY_MAP } from "../../../options/Difficulty";
+import { Difficulty, DIFFICULTY_MAP } from "../../../options/difficulty";
 import { GameOptions, ValidatedOptions } from "../../../options/GameOptions";
 
 interface DifficultyMenuProps {

@@ -6,7 +6,7 @@ import RLeaderboards from "./leaderboards/RLeaderboards";
 import buildStyle, { Font, Color, Display } from "./css/StyleBuilder";
 
 export default function App() {
-    const appStyle = buildStyle(Font.None, Color.DeepBackground, Display.Flex);
+    const appStyle = buildStyle(Font.None, Color.Secondary, Display.Flex);
     appStyle.flexDirection = "column";
     appStyle.padding = "10px";
     appStyle.alignItems = "center";
