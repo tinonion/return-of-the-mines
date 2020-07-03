@@ -1,10 +1,12 @@
+mod threadpool;
+
 use std::io::prelude::*;
 use std::fs;
 use std::net::TcpStream;
 use std::net::TcpListener;
 use std::thread;
 use std::time::Duration;
-use web_server::ThreadPool;
+use threadpool::threadpool::ThreadPool;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
